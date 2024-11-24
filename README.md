@@ -70,13 +70,88 @@ Pengguna terdaftar memiliki akses ke fitur berikut:
 ---
 
 ## **Alur Integrasi dengan Web Service**
-1. **Autentikasi:** 
-   - Aplikasi mobile memverifikasi akun pengguna dengan layanan Django melalui endpoint login dan registrasi.  
-2. **Sinkronisasi Data:** 
-   - Data game, ulasan, wishlist, dan berita diperoleh dari web service Django melalui pemanggilan asinkronus. Data dapat diambil dalam bentuk JSON.  
-3. **Penyimpanan dan Tampilan Data:** 
-   - Data JSON yang diterima diolah dan ditampilkan di aplikasi menggunakan widget Flutter.  
-4. **Pengelolaan Data:** 
-   - Data ulasan, wishlist, dan berita yang ditambahkan pengguna dikirimkan kembali ke server Django untuk disimpan. 
+# Alur Pengintegrasian dengan Web Service
+
+## Authentication
+- Modul autentikasi akan menggunakan backend dari proyek tengah semester dengan framework Django. Pengguna dapat melakukan registrasi dan login melalui aplikasi mobile.
+- Backend akan memberikan token autentikasi (misalnya, JWT atau token session) yang digunakan untuk mengakses API.
+- Modifikasi dilakukan pada `views.py` dan `urls.py` di aplikasi `/authentication` untuk mendukung operasi berikut:
+  - **Registrasi**: Membuat akun baru dengan validasi data pengguna.
+  - **Login**: Memvalidasi kredensial pengguna dan menghasilkan token.
+  - **Logout**: Menghapus token pengguna.
+- Token ini digunakan untuk mengakses endpoint API lainnya.
+
+---
+
+## Pencarian Game
+- Modul pencarian akan menggunakan backend Django. Pengguna dapat mencari game berdasarkan nama melalui endpoint API.
+- Backend akan menyediakan data game berupa respons JSON berisi informasi seperti nama, genre, dan deskripsi game.
+- Modifikasi dilakukan pada `views.py` dan `urls.py` di aplikasi `/search` untuk:
+  - Mendukung pencarian dengan parameter nama.
+  - Menambahkan game baru ke database melalui fitur admin.
+- Data JSON yang diterima diolah dan ditampilkan menggunakan widget Flutter.
+
+---
+
+## Display Game
+- Modul ini menggunakan backend untuk menyediakan daftar toko yang menjual game yang dicari pengguna.
+- Backend akan menyediakan respons JSON yang berisi:
+  - Nama toko.
+  - Lokasi.
+- Modifikasi dilakukan pada `views.py` dan `urls.py` di aplikasi `/store_display` untuk:
+  - Mengintegrasikan fitur pencarian toko.
+  - Memfilter hasil berdasarkan lokasi pengguna jika diperlukan.
+- Data JSON ditampilkan di aplikasi dengan antarmuka yang interaktif.
+
+---
+
+## Wishlist
+- Modul wishlist menggunakan backend untuk menyimpan dan mengelola daftar wishlist pengguna.
+- Modifikasi dilakukan pada `views.py` dan `urls.py` di aplikasi `/wishlist` untuk:
+  - Menyediakan endpoint API untuk menambah, menghapus, dan melihat wishlist.
+  - Mengadaptasi respons JSON untuk kebutuhan frontend Flutter.
+- Data wishlist disinkronkan dengan backend melalui API secara asinkron.
+
+---
+
+## Review
+- Modul ulasan memungkinkan pengguna:
+  - Menambah ulasan baru.
+  - Melihat ulasan pengguna lain.
+- Backend akan mengelola data ulasan, termasuk validasi dan penyimpanan.
+- Modifikasi dilakukan pada `views.py` dan `urls.py` di aplikasi `/review` untuk:
+  - Menyediakan endpoint API untuk menambah ulasan.
+  - Memfilter dan mengurutkan ulasan berdasarkan kriteria tertentu.
+- Data ulasan disinkronkan menggunakan paket HTTP di Flutter.
+
+---
+
+## Game News
+- Modul ini menampilkan berita terbaru dan promosi terkait game PS4.
+- Backend akan mengelola berita, termasuk:
+  - Membuat berita baru.
+  - Mengedit berita melalui fitur admin.
+- Modifikasi dilakukan pada `views.py` dan `urls.py` di aplikasi `/news` untuk menyediakan API.
+- Data berita disajikan dalam format JSON dan ditampilkan menggunakan antarmuka Flutter.
+
+---
+
+## Pengelolaan CORS pada Backend Django
+- Untuk memungkinkan aplikasi Flutter mengakses backend Django:
+  - Tambahkan middleware `django-cors-headers` di `settings.py`.
+  - Atur izin CORS untuk menerima permintaan dari domain frontend Flutter.
+
+---
+
+## Implementasi pada Flutter Frontend
+- Aplikasi Flutter akan mengakses API yang disediakan oleh backend Django untuk melakukan operasi berikut:
+  - **Autentikasi pengguna.**
+  - **Pencarian dan pengelolaan game.**
+  - **Menampilkan daftar toko.**
+  - **Membuat dan mengelola wishlist.**
+  - **Membuat dan melihat ulasan.**
+  - **Menampilkan berita terbaru.**
+- Semua operasi dilakukan dengan permintaan asinkron menggunakan **package HTTP** di Flutter.
+- Data JSON yang diterima dapat di-cache secara lokal untuk meningkatkan performa aplikasi.
 
 ---
