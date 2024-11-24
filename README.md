@@ -27,11 +27,11 @@ Aplikasi ini mengintegrasikan layanan web Django dari proyek tengah semester unt
 
 ### **1. Review**
 - **Deskripsi:** Memungkinkan pengguna untuk menambah ulasan, mengurutkan berdasarkan jumlah bintang, dan melihat ulasan pengguna lain.  
-- **Pengembang:** Priscilla Natanael Surjanto  
+- **Pengembang:** Utandra Nur Ahmad Jais  
 
 ### **2. User Authentication**
 - **Deskripsi:** Mengelola registrasi, login, dan profil pengguna.  
-- **Pengembang:** Aliefa Alsyafiandra Setiawati Mahdi  
+- **Pengembang:** Oscar Ryanda Putra  
 
 ### **3. Pencarian Game**
 - **Deskripsi:** Menyediakan fitur pencarian game berdasarkan nama. Admin dapat menambahkan game baru ke database.  
@@ -39,15 +39,15 @@ Aplikasi ini mengintegrasikan layanan web Django dari proyek tengah semester unt
 
 ### **4. Display Game**
 - **Deskripsi:** Menampilkan daftar toko yang menjual game yang dicari pengguna, lengkap dengan informasi lokasi dan harga.  
-- **Pengembang:** Oscar Ryanda Putra  
+- **Pengembang:** Priscilla Natanael Surjanto 
 
 ### **5. Wishlist**
 - **Deskripsi:** Memungkinkan pengguna menambah game ke wishlist dan mengelolanya.  
-- **Pengembang:** Rahma Dwi Maghfira  
+- **Pengembang:** Rahma Dwi Maghfira   
 
 ### **6. Game News**
 - **Deskripsi:** Menampilkan berita terbaru dan promosi terkait dunia game PS4. Admin dapat mengelola berita tersebut.  
-- **Pengembang:** Utandra Nur Ahmad Jais  
+- **Pengembang:** Aliefa Alsyafiandra Setiawati Mahdi  
 
 ---
 
