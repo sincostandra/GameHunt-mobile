@@ -70,7 +70,6 @@ Pengguna terdaftar memiliki akses ke fitur berikut:
 ---
 
 ## **Alur Integrasi dengan Web Service**
-# Alur Pengintegrasian dengan Web Service
 
 ## Authentication
 - Modul autentikasi akan menggunakan backend dari proyek tengah semester dengan framework Django. Pengguna dapat melakukan registrasi dan login melalui aplikasi mobile.
