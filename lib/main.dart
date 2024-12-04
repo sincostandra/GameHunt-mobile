@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gamehunt/search/screens/menu.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:gamehunt/search/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+
+import 'authentication/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,14 +19,9 @@ class MyApp extends StatelessWidget {
         return request;
       },
       child: MaterialApp(
-        title: 'Snap Buy',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.deepPurple,
-          ).copyWith(secondary: Colors.deepPurple[400]),
-        ),
-        home: MyHomePage(),
+        title: 'GameHunt',
+        theme: ThemeData(),
+        home: const LoginPage(),
       ),
     );
   }
