@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         return request;
       },
       child: MaterialApp(
-        title: 'Mental Health Tracker',
+        title: 'GameHunt',
         theme: ThemeData(),
         home: const LoginPage(),
       ),

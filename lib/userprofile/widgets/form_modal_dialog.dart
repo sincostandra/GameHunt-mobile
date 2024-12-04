@@ -439,7 +439,7 @@ class _FormModalDialogState extends State<FormModalDialog> {
                                   if (_formKey.currentState!.validate()) {
                                       print(_dateOfBirthController.text);
                                       final response = await request.postJson(
-                                        "http://10.0.2.2:8000/userprofile/userprofile/update-flutter",
+                                        "http://127.0.0.1:8000/userprofile/userprofile/update-flutter",
                                         jsonEncode(<String, dynamic>{
                                           'description': _description,
                                           'first_name': _firstName,
