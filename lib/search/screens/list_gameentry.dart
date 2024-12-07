@@ -22,11 +22,25 @@ class _GameEntryPageState extends State<GameEntryPage> {
   List<Game> _filteredGames = [];
   String _searchQuery = '';
   String _sortBy = '';
+  bool _isAdmin = false; // Tambahkan state untuk menyimpan role user
 
   @override
   void initState() {
     super.initState();
+    _fetchUserRole();
     _fetchAndStoreGames();
+  }
+
+  Future<void> _fetchUserRole() async {
+    final request = context.read<CookieRequest>();
+    try {
+      final response = await request.get('http://127.0.0.1:8000/user-role/');
+      setState(() {
+        _isAdmin = response['role'] == 'admin'; // Cek role user
+      });
+    } catch (e) {
+      print('Error fetching user role: $e');
+    }
   }
 
   Future<void> _fetchAndStoreGames() async {
@@ -222,31 +236,33 @@ class _GameEntryPageState extends State<GameEntryPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const GameEntryFormPage()),
-                            ).then((_) {
-                              // Refresh setelah add
-                              _fetchAndStoreGames();
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                        if (_isAdmin) ...[
+                          const SizedBox(width: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const GameEntryFormPage()),
+                              ).then((_) {
+                                // Refresh setelah add
+                                _fetchAndStoreGames();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 12.0),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 12.0),
+                            child: const Text('+',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold)),
                           ),
-                          child: const Text('+',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold)),
-                        ),
+                        ]
                       ],
                     ),
                     const SizedBox(height: 24),
@@ -312,6 +328,7 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                   ],
                                 ),
                               ),
+
                               const SizedBox(width: 16.0),
                               // Bagian kanan: tombol Edit/Delete + rating circle + genre
                               Column(
@@ -320,73 +337,86 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      // Tombol Edit
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  GameEntryEditFormPage(
-                                                gameId:
-                                                    gameData.pk, // UUID String
-                                                initialData: {
-                                                  'name': game.name,
-                                                  'year': game.year,
-                                                  'description':
-                                                      game.description,
-                                                  'developer': game.developer,
-                                                  'genre': game.genre,
-                                                  'ratings': game.ratings,
-                                                  'harga': game.harga,
-                                                  'toko1': game.toko1,
-                                                  'alamat1': game.alamat1,
-                                                  'toko2': game.toko2,
-                                                  'alamat2': game.alamat2,
-                                                  'toko3': game.toko3,
-                                                  'alamat3': game.alamat3,
-                                                },
-                                              ),
-                                            ),
-                                          ).then((_) {
-                                            // Refresh setelah edit
-                                            _fetchAndStoreGames();
-                                          });
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          side: BorderSide(color: primaryColor),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0)),
-                                        ),
-                                        child: Text('Edit',
-                                            style:
-                                                TextStyle(color: primaryColor)),
-                                      ),
-                                      const SizedBox(width: 8.0),
-                                      // Tombol Delete
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          // Karena tidak ada deleteJson, kita gunakan http.delete
-                                          final url = Uri.parse(
-                                              "http://127.0.0.1:8000/delete-game-flutter/${gameData.pk}/");
-                                          final httpResponse =
-                                              await http.delete(url);
-                                          if (httpResponse.statusCode == 200) {
-                                            final responseData =
-                                                jsonDecode(httpResponse.body);
-                                            if (responseData['status'] ==
-                                                'success') {
-                                              setState(() {
-                                                _filteredGames.removeAt(index);
-                                              });
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      "Game successfully deleted!"),
+                                      if (_isAdmin) ...[
+                                        // Tombol Edit
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    GameEntryEditFormPage(
+                                                  gameId: gameData
+                                                      .pk, // UUID String
+                                                  initialData: {
+                                                    'name': game.name,
+                                                    'year': game.year,
+                                                    'description':
+                                                        game.description,
+                                                    'developer': game.developer,
+                                                    'genre': game.genre,
+                                                    'ratings': game.ratings,
+                                                    'harga': game.harga,
+                                                    'toko1': game.toko1,
+                                                    'alamat1': game.alamat1,
+                                                    'toko2': game.toko2,
+                                                    'alamat2': game.alamat2,
+                                                    'toko3': game.toko3,
+                                                    'alamat3': game.alamat3,
+                                                  },
                                                 ),
-                                              );
+                                              ),
+                                            ).then((_) {
+                                              // Refresh setelah edit
+                                              _fetchAndStoreGames();
+                                            });
+                                          },
+                                          style: OutlinedButton.styleFrom(
+                                            side:
+                                                BorderSide(color: primaryColor),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0)),
+                                          ),
+                                          child: Text('Edit',
+                                              style: TextStyle(
+                                                  color: primaryColor)),
+                                        ),
+                                        const SizedBox(width: 8.0),
+                                        // Tombol Delete
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            // Karena tidak ada deleteJson, kita gunakan http.delete
+                                            final url = Uri.parse(
+                                                "http://127.0.0.1:8000/delete-game-flutter/${gameData.pk}/");
+                                            final httpResponse =
+                                                await http.delete(url);
+                                            if (httpResponse.statusCode ==
+                                                200) {
+                                              final responseData =
+                                                  jsonDecode(httpResponse.body);
+                                              if (responseData['status'] ==
+                                                  'success') {
+                                                setState(() {
+                                                  _filteredGames
+                                                      .removeAt(index);
+                                                });
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        "Game successfully deleted!"),
+                                                  ),
+                                                );
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        "Error deleting game."),
+                                                  ),
+                                                );
+                                              }
                                             } else {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
@@ -396,26 +426,18 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                                 ),
                                               );
                                             }
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                    "Error deleting game."),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: primaryColor,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0)),
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0)),
+                                          ),
+                                          child: const Text('Delete',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
                                         ),
-                                        child: const Text('Delete',
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
+                                      ],
                                       const SizedBox(width: 16.0),
                                       // Garis vertikal
                                       Container(
