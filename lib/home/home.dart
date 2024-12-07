@@ -33,12 +33,12 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 16), // Jarak antar tombol
             CupertinoButton(
               color: Colors.blue,
-              child: const Text("Mood Entry List"),
+              child: const Text("View Games"),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MoodEntryPage(),
+                    builder: (context) => const GameEntryPage(),
                   ),
                 );
               },

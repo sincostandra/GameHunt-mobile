@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gamehunt/search/screens/moodentry_form.dart';
-import 'package:gamehunt/search/screens/list_moodentry.dart';
+import 'package:gamehunt/search/screens/gameentry_form.dart';
+import 'package:gamehunt/search/screens/list_gameentry.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:gamehunt/search/screens/login.dart';
+import 'package:gamehunt/authentication/login.dart';
 
 class ItemHomepage {
   final String name;
@@ -42,12 +42,12 @@ class ItemCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const MoodEntryFormPage()),
+                  builder: (context) => const GameEntryFormPage()),
             );
           } else if (item.name == "Lihat Mood") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const MoodEntryPage()),
+              MaterialPageRoute(builder: (context) => const GameEntryPage()),
             );
           }
           // statement if sebelumnya

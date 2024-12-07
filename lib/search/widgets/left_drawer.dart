@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gamehunt/search/screens/menu.dart';
-import 'package:gamehunt/search/screens/moodentry_form.dart';
-import 'package:gamehunt/search/screens/list_moodentry.dart';
+import 'package:gamehunt/home/home.dart';
+import 'package:gamehunt/search/screens/gameentry_form.dart';
+import 'package:gamehunt/search/screens/list_gameentry.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -47,19 +47,19 @@ class LeftDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyHomePage(),
+                    builder: (context) => HomePage(),
                   ));
             },
           ),
           ListTile(
             leading: const Icon(Icons.mood),
-            title: const Text('Tambah Mood'),
+            title: const Text('Tambah Game'),
             // Bagian redirection ke MoodEntryFormPage
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const MoodEntryFormPage()),
+                    builder: (context) => const GameEntryFormPage()),
               );
             },
           ),
@@ -70,7 +70,7 @@ class LeftDrawer extends StatelessWidget {
               // Route menu ke halaman mood
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MoodEntryPage()),
+                MaterialPageRoute(builder: (context) => const GameEntryPage()),
               );
             },
           ),
