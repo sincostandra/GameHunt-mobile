@@ -75,14 +75,14 @@ class Fields {
         description: json["description"],
         developer: json["developer"],
         genre: json["genre"],
-        ratings: json["ratings"]?.toDouble(),
+        ratings: (json["ratings"] as num).toDouble(),
         harga: json["harga"],
-        toko1: json["toko1"], // String bebas
+        toko1: json["toko1"],
         alamat1: json["alamat1"],
-        toko2: json["toko2"], // Nullable string
-        alamat2: json["alamat2"],
-        toko3: json["toko3"],
-        alamat3: json["alamat3"],
+        toko2: json["toko2"] == null ? null : json["toko2"] as String,
+        alamat2: json["alamat2"] == null ? null : json["alamat2"] as String,
+        toko3: json["toko3"] == null ? null : json["toko3"] as String,
+        alamat3: json["alamat3"] == null ? null : json["alamat3"] as String,
       );
 
   Map<String, dynamic> toJson() => {

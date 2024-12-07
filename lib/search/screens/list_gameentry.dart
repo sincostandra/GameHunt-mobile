@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gamehunt/models/game.dart';
-import 'package:gamehunt/search/widgets/left_drawer.dart';
+import 'package:gamehunt/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:gamehunt/search/screens/gameentry_form.dart';
 import 'package:gamehunt/search/screens/gameentry_edit_form.dart';
+import 'package:gamehunt/widgets/navbar.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -31,22 +32,63 @@ class _GameEntryPageState extends State<GameEntryPage> {
   Future<void> _fetchAndStoreGames() async {
     final request = context.read<CookieRequest>();
     try {
+      // Ambil data dari API
       final response = await request.get('http://127.0.0.1:8000/search/json/');
 
-      // Cek apakah response null
-      if (response == null || response.isEmpty) {
-        throw Exception("No data received from the server");
-      }
+      // print("Raw response: $response");
 
-      List<Game> games = [];
-      for (var d in response) {
-        games.add(Game.fromJson(d));
-      }
+      // Pastikan respons adalah List
+      if (response is List) {
+        List<Game> games = [];
+        for (var data in response) {
+          try {
+            // Parsing manual setiap item
+            String model = "game.model"; // Default model
+            String pk = data["id"] ?? ""; // Ambil ID
+            Map<String, dynamic> fieldsData = data["fields"] ?? {};
 
-      setState(() {
-        _allGames = games;
-        _filteredGames = List.from(games);
-      });
+            Fields fields = Fields(
+              name: fieldsData["name"] ?? "Unknown",
+              year: fieldsData["year"] ?? 0,
+              description: fieldsData["description"] ?? "No description",
+              developer: fieldsData["developer"] ?? "Unknown developer",
+              genre: fieldsData["genre"] ?? "Unknown genre",
+              ratings: (fieldsData["ratings"] as num?)?.toDouble() ?? 0.0,
+              harga: fieldsData["harga"] ?? 0,
+              toko1: fieldsData["toko1"] ?? "Unknown toko",
+              alamat1: fieldsData["alamat1"] ?? "Unknown alamat",
+              toko2:
+                  fieldsData["toko2"] == null || fieldsData["toko2"] == "null"
+                      ? null
+                      : fieldsData["toko2"],
+              alamat2: fieldsData["alamat2"] == null ||
+                      fieldsData["alamat2"] == "null"
+                  ? null
+                  : fieldsData["alamat2"],
+              toko3:
+                  fieldsData["toko3"] == null || fieldsData["toko3"] == "null"
+                      ? null
+                      : fieldsData["toko3"],
+              alamat3: fieldsData["alamat3"] == null ||
+                      fieldsData["alamat3"] == "null"
+                  ? null
+                  : fieldsData["alamat3"],
+            );
+
+            // Buat objek Game
+            games.add(Game(model: model, pk: pk, fields: fields));
+          } catch (e) {
+            print("Error parsing item: $data, Error: $e");
+          }
+        }
+
+        setState(() {
+          _allGames = games;
+          _filteredGames = List.from(games);
+        });
+      } else {
+        throw Exception("Invalid response format: Expected a List");
+      }
     } catch (e) {
       print('Error fetching game data: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,48 +142,7 @@ class _GameEntryPageState extends State<GameEntryPage> {
         .watch<CookieRequest>(); // Pastikan request didefinisikan di sini
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        elevation: 0,
-        title: Row(
-          children: [
-            const Icon(Icons.games, color: Colors.white),
-            const SizedBox(width: 8),
-            const Text(
-              'GameHunt',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {},
-              child: const Text('News', style: TextStyle(color: Colors.white)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Browse Games',
-                  style: TextStyle(color: Colors.white)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text('Wishlist', style: TextStyle(color: Colors.white)),
-            ),
-            const SizedBox(width: 8),
-            CircleAvatar(
-              radius: 15,
-              backgroundColor: Colors.white,
-              child: Text(
-                'A',
-                style: TextStyle(color: primaryColor),
-              ),
-            ),
-            const SizedBox(width: 8),
-          ],
-        ),
-      ),
+      appBar: Navbar(primaryColor: primaryColor),
       drawer: const LeftDrawer(),
       backgroundColor: Colors.grey[100],
       body: _allGames.isEmpty

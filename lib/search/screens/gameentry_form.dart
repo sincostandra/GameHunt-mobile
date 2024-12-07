@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:gamehunt/widgets/navbar.dart';
 import 'dart:convert';
 
 class GameEntryFormPage extends StatefulWidget {
@@ -28,15 +29,10 @@ class _GameEntryFormPageState extends State<GameEntryFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = const Color(0xFFF44336);
     final request = context.watch<CookieRequest>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text('Game Entry Form'),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-      ),
+      appBar: Navbar(primaryColor: primaryColor),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(

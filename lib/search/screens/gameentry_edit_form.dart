@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:gamehunt/widgets/navbar.dart';
 import 'package:provider/provider.dart';
 
 class GameEntryEditFormPage extends StatefulWidget {
   final String gameId;
   final Map<String, dynamic> initialData;
 
-  const GameEntryEditFormPage({super.key, required this.gameId, required this.initialData});
+  const GameEntryEditFormPage(
+      {super.key, required this.gameId, required this.initialData});
 
   @override
   State<GameEntryEditFormPage> createState() => _GameEntryEditFormPageState();
@@ -50,7 +52,8 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
   }
 
   Future<void> _updateGame(CookieRequest request) async {
-    final url = Uri.parse("http://127.0.0.1:8000/edit-game-flutter/${widget.gameId}/");
+    final url =
+        Uri.parse("http://127.0.0.1:8000/edit-game-flutter/${widget.gameId}/");
 
     try {
       // Headers: Sertakan cookie untuk otentikasi
@@ -93,7 +96,8 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error updating game: ${response.statusCode}")),
+          SnackBar(
+              content: Text("Error updating game: ${response.statusCode}")),
         );
       }
     } catch (e) {
@@ -106,15 +110,9 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-
+    final primaryColor = const Color(0xFFF44336);
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text('Edit Game Entry'),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-      ),
+      appBar: Navbar(primaryColor: primaryColor),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -132,7 +130,8 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
                 label: "Year",
                 keyboardType: TextInputType.number,
                 initialValue: _year?.toString(),
-                onChanged: (value) => setState(() => _year = int.tryParse(value!)),
+                onChanged: (value) =>
+                    setState(() => _year = int.tryParse(value!)),
               ),
               _buildTextField(
                 label: "Description",
@@ -159,7 +158,8 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
                 label: "Ratings (0-5)",
                 initialValue: _ratings.toString(),
                 keyboardType: TextInputType.number,
-                onChanged: (value) => setState(() => _ratings = double.tryParse(value!) ?? 0.0),
+                onChanged: (value) =>
+                    setState(() => _ratings = double.tryParse(value!) ?? 0.0),
                 validator: (value) {
                   if (value!.isEmpty) return "Ratings cannot be empty!";
                   final rating = double.tryParse(value);
@@ -173,7 +173,8 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
                 label: "Price",
                 initialValue: _harga.toString(),
                 keyboardType: TextInputType.number,
-                onChanged: (value) => setState(() => _harga = int.tryParse(value!) ?? 0),
+                onChanged: (value) =>
+                    setState(() => _harga = int.tryParse(value!) ?? 0),
                 validator: (value) =>
                     value!.isEmpty ? "Price cannot be empty!" : null,
               ),
