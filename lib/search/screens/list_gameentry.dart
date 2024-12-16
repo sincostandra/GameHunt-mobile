@@ -9,6 +9,7 @@ import 'package:gamehunt/search/screens/gameentry_edit_form.dart';
 import 'package:gamehunt/widgets/navbar.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:gamehunt/wishlist/screens/wishlist_detail.dart';
 
 class GameEntryPage extends StatefulWidget {
   const GameEntryPage({super.key});
@@ -147,6 +148,13 @@ class _GameEntryPageState extends State<GameEntryPage> {
     } else if (_sortBy == 'price') {
       _filteredGames.sort((a, b) => a.fields.harga.compareTo(b.fields.harga));
     }
+  }
+
+  void _navigateToWishlist(BuildContext context, String gameId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WishlistDetailPage(gameId: gameId)),
+    );
   }
 
   @override
@@ -297,11 +305,26 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      game.name,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold,
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          // Blink red effect
+                                          Future.delayed(
+                                              const Duration(milliseconds: 100),
+                                              () {
+                                            setState(() {
+                                              _navigateToWishlist(context, gameData.pk);
+                                            });
+                                          });
+                                        });
+                                      },
+                                      child: Text(
+                                        game.name,
+                                        style: const TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red, // Blink red effect
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 4),

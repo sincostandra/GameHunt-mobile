@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamehunt/search/screens/list_gameentry.dart';
+import 'package:gamehunt/wishlist/screens/wishlist_display.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -59,9 +60,11 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.favorite_outline),
             title: const Text('Wishlist'),
             onTap: () {
-              // Belum diimplementasi - Placeholder
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Wishlist belum diimplementasi")),
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const WishlistPage(),
+                ),
               );
             },
           ),
