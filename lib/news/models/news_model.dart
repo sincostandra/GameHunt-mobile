@@ -36,14 +36,14 @@ class Fields {
     String title;
     String article;
     String author;
-    DateTime postDate;
+    // DateTime postDate;
     DateTime updateDate;
 
     Fields({
         required this.title,
         required this.article,
         required this.author,
-        required this.postDate,
+        // required this.postDate,
         required this.updateDate,
     });
 
@@ -51,7 +51,7 @@ class Fields {
         title: json["title"],
         article: json["article"],
         author: json["author"],
-        postDate: DateTime.parse(json["post_date"]),
+        // postDate: DateTime.parse(json["post_date"]),
         updateDate: DateTime.parse(json["update_date"]),
     );
 
@@ -59,7 +59,7 @@ class Fields {
         "title": title,
         "article": article,
         "author": author,
-        "post_date": postDate.toIso8601String(),
+        // "post_date": postDate.toIso8601String(),
         "update_date": updateDate.toIso8601String(),
     };
 }

@@ -1,39 +1,33 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:gamehunt/news/screens/news_page.dart';
+import 'package:gamehunt/widgets/navbar.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:gamehunt/home/home.dart';
-// import 'package:tioutfitters/widgets/left_drawer.dart';
+import 'package:gamehunt/widgets/left_drawer.dart';
 
-class ProductEntryFormPage extends StatefulWidget {
-  const ProductEntryFormPage({super.key});
+class NewsFormPage extends StatefulWidget {
+  const NewsFormPage({super.key});
 
   @override
-  State<ProductEntryFormPage> createState() => _ProductEntryFormPageState();
+  State<NewsFormPage> createState() => _NewsFormPageState();
 }
 
-class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
+class _NewsFormPageState extends State<NewsFormPage> {
   final _formKey = GlobalKey<FormState>();
-  String _name = "";
-	String _description = "";
-	int _price = 0;
+  String _title = "";
+	String _article = "";
+	String _author = "";
 
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final primaryColor = const Color(0xFFF44336);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Add Product Form',
-          ),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-      ),
-      // drawer: const LeftDrawer(),
+      appBar: Navbar(primaryColor: primaryColor),
+      drawer: const LeftDrawer(),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -44,20 +38,20 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Product name",
-                    labelText: "Product name",
+                    hintText: "News title",
+                    labelText: "News title",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _name = value!;
+                      _title = value!;
                     });
                   },
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Product name cannot be empty!";
+                      return "News title cannot be empty!";
                     }
                     return null;
                   },
@@ -67,20 +61,20 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Description",
-                    labelText: "Description",
+                    hintText: "Article",
+                    labelText: "Article",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _description = value!;
+                      _article = value!;
                     });
                   },
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Product must have a description!";
+                      return "News must have an article!";
                     }
                     return null;
                   },
@@ -90,23 +84,20 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Price",
-                    labelText: "Price",
+                    hintText: "Author",
+                    labelText: "Author",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _price = int.tryParse(value!) ?? 0;
+                      _author = value!;
                     });
                   },
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Product must have a price!";
-                    }
-                    if (int.tryParse(value) == null) {
-                      return "Product prices must be numeric!";
+                      return "News must have an author!";
                     }
                     return null;
                   },
@@ -121,16 +112,47 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                       backgroundColor: WidgetStateProperty.all(
                           Theme.of(context).colorScheme.primary),
                     ),
+  //                     onPressed: () {
+  //   if (_formKey.currentState!.validate()) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return AlertDialog(
+  //           title: const Text('News berhasil tersimpan'),
+  //           content: SingleChildScrollView(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text('title: $_title'),
+  //                 Text('author: $_author'),
+  //               ],
+  //             ),
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 _formKey.currentState!.reset();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // },
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                           // Kirim ke Django dan tunggu respons
                           // Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                           final response = await request.postJson(
-                              "http://127.0.0.1:8000/create-flutter/",
+                              "http://127.0.0.1:8000/news/create-flutter/",
                               jsonEncode(<String, String>{
-                                  'mood': _name,
-                                  'price': _price.toString(),
-                                  'description': _description,
+                                  'title': _title,
+                                  'author': _author,
+                                  'article': _article,
+                                  'update_date': DateTime.now().toIso8601String(),
                               // Sesuaikan field data sesuai dengan aplikasimu
                               }),
                           );
@@ -138,11 +160,11 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                               if (response['status'] == 'success') {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(const SnackBar(
-                                  content: Text("Mood baru berhasil disimpan!"),
+                                  content: Text("News baru berhasil disimpan!"),
                                   ));
                                   Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const HomePage()),
+                                      MaterialPageRoute(builder: (context) => const NewsPage()),
                                   );
                               } else {
                                   ScaffoldMessenger.of(context)

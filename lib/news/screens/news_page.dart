@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gamehunt/news/models/news_model.dart';
+import 'package:gamehunt/news/screens/news_form.dart';
 import 'package:gamehunt/news/widgets/news_box.dart';
+import 'package:gamehunt/widgets/navbar.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart'; 
 import 'package:provider/provider.dart';
 import 'package:gamehunt/news/screens/news_detail.dart'; 
-
-// import 'package:gamehunt/widgets/left_drawer.dart';
+import 'package:gamehunt/widgets/left_drawer.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({super.key});
@@ -15,9 +16,10 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
+  bool _isAdmin = false;
   Future<List<News>> fetchNews(CookieRequest request) async {
     // Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-    final response = await request.get('http://127.0.0.1:8000/json/');
+    final response = await request.get('http://127.0.0.1:8000/news/json/');
     
     // Melakukan decode response menjadi bentuk json
     var data = response;
@@ -32,14 +34,57 @@ class _NewsPageState extends State<NewsPage> {
     return listNews;
   }
 
+    Future<void> _fetchUserRole() async {
+    final request = context.read<CookieRequest>();
+    try {
+      final response = await request.get('http://127.0.0.1:8000/user-role/');
+      setState(() {
+        _isAdmin = response['role'] == 'admin'; // Cek role user
+      });
+    } catch (e) {
+      print('Error fetching user role: $e');
+    }
+  }
+
+    @override
+  void initState() {
+    super.initState();
+    _fetchUserRole();
+  }
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final primaryColor = const Color(0xFFF44336);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('News List'),
+      appBar: Navbar(primaryColor: primaryColor),
+      drawer: const LeftDrawer(),
+      floatingActionButton: Column(
+        children: [
+          if (_isAdmin) ...[
+            FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const NewsFormPage()),
+              );
+            },
+              backgroundColor: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              // padding: const EdgeInsets.symmetric(
+              //     horizontal: 16.0, vertical: 12.0),
+            child: const Text('+',
+              style: TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
+          ]
+        ],
       ),
-      // drawer: const LeftDrawer(),
       body: FutureBuilder(
         future: fetchNews(request),
         builder: (context, AsyncSnapshot snapshot) {
@@ -70,7 +115,7 @@ class _NewsPageState extends State<NewsPage> {
           ),
         );
       },
-      child: NewsBox(news: news)
+      child: NewsBox(news: news, isAdmin: _isAdmin,)
     );
   },
 );
