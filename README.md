@@ -25,30 +25,36 @@ Aplikasi ini mengintegrasikan layanan web Django dari proyek tengah semester unt
 
 ## **Daftar Modul dan Pembagian Kerja**
 
-### **1. Review**
-- **Deskripsi:** Memungkinkan pengguna untuk menambah ulasan, mengurutkan berdasarkan jumlah bintang, dan melihat ulasan pengguna lain.  
-- **Pengembang:** Utandra Nur Ahmad Jais  
+#### **Review** (Utandra Nur Ahmad Jais)
 
-### **2. User Authentication**
-- **Deskripsi:** Mengelola registrasi, login, dan profil pengguna.  
-- **Pengembang:** Oscar Ryanda Putra  
+- Pengguna memiliki kemampuan untuk menambahkan ulasan terkait kaset game dari berbagai toko terdekat. Setiap review bisa memberikan informasi yang bermanfaat bagi pengguna lain.
+- Ulasan dapat diurutkan berdasarkan jumlah bintang, sehingga memudahkan pengguna untuk melihat review dengan rating tertinggi.
+- Admin memiliki kendali penuh atas review, termasuk kemampuan untuk menambah dan menghapus review sesuai kebutuhan.
 
-### **3. Pencarian Game**
-- **Deskripsi:** Menyediakan fitur pencarian game berdasarkan nama. Admin dapat menambahkan game baru ke database.  
-- **Pengembang:** Vincent Davis Leonard Tjoeng  
+#### **User Authentication** (Oscar Ryanda Putra)
 
-### **4. Display Game**
-- **Deskripsi:** Menampilkan daftar toko yang menjual game yang dicari pengguna, lengkap dengan informasi lokasi dan harga.  
-- **Pengembang:** Priscilla Natanael Surjanto 
+- Pengguna dapat membuat akun dan login untuk mengakses fitur-fitur eksklusif GameHunt.
+- Setelah mendaftar, pengguna dapat membuat dan mengedit profil mereka, yang berfungsi sebagai pusat informasi pribadi dan aktivitas pengguna di platform.
 
-### **5. Wishlist**
-- **Deskripsi:** Memungkinkan pengguna menambah game ke wishlist dan mengelolanya.  
-- **Pengembang:** Rahma Dwi Maghfira   
+#### **Pencarian Game** (Vincent Davis Leonard Tjoeng)
 
-### **6. Game News**
-- **Deskripsi:** Menampilkan berita terbaru dan promosi terkait dunia game PS4. Admin dapat mengelola berita tersebut.  
-- **Pengembang:** Aliefa Alsyafiandra Setiawati Mahdi  
+- Pengguna dapat dengan mudah mencari kaset game berdasarkan nama game yang diinginkan.
+- Admin memiliki hak untuk menambahkan game baru ke dalam database, memastikan ketersediaan game PS4 terbaru dan klasik langka selalu diperbarui.
 
+#### **Display Game** (Priscilla Natanael Surjanto)
+
+- Pengguna dapat melihat daftar toko yang menjual game yang mereka cari, lengkap dengan informasi terkait lokasi dan harga.
+- Game yang diminati pengguna dapat ditambahkan ke wishlist untuk disimpan dan dikelola.
+
+#### **Wishlist** (Rahma Dwi Maghfira)
+
+- Pengguna dapat menambahkan game favorit mereka ke dalam wishlist untuk memudahkan pelacakan dan akses cepat di masa mendatang.
+- Wishlist juga memungkinkan pengguna untuk menghapus game yang tidak lagi mereka inginkan dari daftar.
+
+#### **Game News** (Aliefa Alsyafiandra Setiawati Mahdi)
+
+- Admin memiliki kemampuan untuk mengelola berita terbaru mengenai dunia game PS4, termasuk menambahkan, mengedit, dan menghapus berita.
+- Pengguna dapat dengan mudah mengakses berbagai informasi terbaru, promosi, dan diskon menarik di dunia game melalui fitur berita ini.
 ---
 
 ## **Peran atau Aktor Pengguna**
@@ -83,12 +89,24 @@ Pengguna terdaftar memiliki akses ke fitur berikut:
 ---
 
 ## Pencarian Game
-- Modul pencarian akan menggunakan backend Django. Pengguna dapat mencari game berdasarkan nama melalui endpoint API.
-- Backend akan menyediakan data game berupa respons JSON berisi informasi seperti nama, genre, dan deskripsi game.
-- Modifikasi dilakukan pada `views.py` dan `urls.py` di aplikasi `/search` untuk:
-  - Mendukung pencarian dengan parameter nama.
-  - Menambahkan game baru ke database melalui fitur admin.
-- Data JSON yang diterima diolah dan ditampilkan menggunakan widget Flutter.
+### **Backend Django**  
+- **Modul Pencarian** menggunakan Django sebagai backend.  
+- **Endpoint API** yang digunakan:
+  - **`/search/json/`**: Menyediakan daftar game dalam format JSON.  
+  - **`/user-role/`**: Mengecek role pengguna (**admin** atau **user**).  
+  - **`/create-game-flutter/`**: Menambahkan game baru (hanya untuk admin).  
+  - **`/edit-game-flutter/<game_id>/`**: Mengedit data game berdasarkan `id` (hanya untuk admin).  
+  - **`/delete-game-flutter/<game_id>/`**: Menghapus game berdasarkan `id` (hanya untuk admin).  
+- **Struktur Respons JSON**:
+  - **`name`**, **`year`**, **`description`**, **`developer`**, **`genre`**, **`ratings`**, **`harga`**, serta informasi toko (**toko1–toko3** dan **alamat1–alamat3**).
+
+### **Modifikasi Views dan Endpoint**  
+- **`views.py`**:
+  - Menambahkan validasi **role admin** untuk fitur **Tambah, Edit**, dan **Hapus Game**.  
+  - Menggunakan **CSRF exempt** untuk menerima request dari Flutter.  
+  - **`get_user_role`** digunakan untuk mengecek role pengguna (admin atau user).  
+- **`urls.py`**:
+  - URL ditambahkan untuk mendukung **CRUD game** dan **validasi role pengguna**
 
 ---
 
