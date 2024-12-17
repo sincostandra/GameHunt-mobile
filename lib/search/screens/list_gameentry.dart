@@ -467,7 +467,7 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                   const SizedBox(height: 8.0),
                                   // Genre
                                   Text(
-                                    'Genre: ${game.genre}',
+                                    'Genre: ${game.genre.length > 10 ? '${game.genre.substring(0, 10)}...' : game.genre}',
                                     style:
                                         const TextStyle(color: Colors.black54),
                                   ),
