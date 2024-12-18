@@ -1,14 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gamehunt/news/models/news_model.dart';
+import 'package:gamehunt/news/screens/edit_news.dart';
+import 'package:gamehunt/news/screens/news_page.dart';
 import 'package:gamehunt/widgets/navbar.dart';
 import 'package:gamehunt/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class NewsDetail extends StatelessWidget {
   final News news;
+  final bool isAdmin;
 
-  const NewsDetail({Key? key, required this.news}) : super(key: key);
+  const NewsDetail({Key? key, required this.news, required this.isAdmin}) : super(key: key);
   final primaryColor = const Color(0xFFF44336);
 
   @override
@@ -17,6 +23,94 @@ class NewsDetail extends StatelessWidget {
     return Scaffold(
       appBar: Navbar(primaryColor: primaryColor),
       drawer: const LeftDrawer(),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (isAdmin) ...[
+            FloatingActionButton(
+            heroTag: null,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        NewsEditFormPage(initialData: news)),
+              );
+            },
+              backgroundColor: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              // padding: const EdgeInsets.symmetric(
+              //     horizontal: 16.0, vertical: 12.0),
+              child: const Icon(Icons.edit,
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+            // child: const Text('Edit News',
+            // textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //       fontSize: 12, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(height: 10),
+            FloatingActionButton(
+            heroTag: null,
+            onPressed: () async {
+              // Karena tidak ada deleteJson, kita gunakan http.delete
+              final url = Uri.parse(
+                  "http://127.0.0.1:8000/news/delete-flutter/${news.pk}/");
+              final httpResponse =
+                  await http.delete(url);
+              if (httpResponse.statusCode ==
+                  200) {
+                final responseData = jsonDecode(
+                    httpResponse.body);
+                if (responseData['status'] ==
+                    'success') {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const NewsPage()),
+                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          "Game successfully deleted!"),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          "Error deleting game."),
+                    ),
+                  );
+                }
+              } else {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        "Error deleting game."),
+                  ),
+                );
+              }
+            },
+              backgroundColor: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              // padding: const EdgeInsets.symmetric(
+              //     horizontal: 16.0, vertical: 12.0),
+              child: const Icon(Icons.delete,
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+          ]
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

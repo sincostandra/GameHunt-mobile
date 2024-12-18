@@ -61,6 +61,7 @@ class _NewsPageState extends State<NewsPage> {
       appBar: Navbar(primaryColor: primaryColor),
       drawer: const LeftDrawer(),
       floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if (_isAdmin) ...[
             FloatingActionButton(
@@ -111,11 +112,11 @@ class _NewsPageState extends State<NewsPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NewsDetail(news: news),
+            builder: (context) => NewsDetail(news: news, isAdmin: _isAdmin),
           ),
         );
       },
-      child: NewsBox(news: news, isAdmin: _isAdmin,)
+      child: NewsBox(news: news)
     );
   },
 );

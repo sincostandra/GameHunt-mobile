@@ -8,11 +8,10 @@ import 'package:gamehunt/widgets/navbar.dart';
 import 'package:provider/provider.dart';
 
 class NewsEditFormPage extends StatefulWidget {
-  final String newsId;
   final News initialData;
 
   const NewsEditFormPage(
-      {super.key, required this.newsId, required this.initialData});
+      {super.key, required this.initialData});
 
   @override
   State<NewsEditFormPage> createState() => _NewsEditFormPageState();
@@ -24,6 +23,7 @@ class _NewsEditFormPageState extends State<NewsEditFormPage> {
   late String _title;
   late String _article;
   late String _author;
+  late String _newsId;
 
   @override
   void initState() {
@@ -31,11 +31,12 @@ class _NewsEditFormPageState extends State<NewsEditFormPage> {
     _title = widget.initialData.fields.title;
     _article = widget.initialData.fields.article;
     _author = widget.initialData.fields.author;
+    _newsId = widget.initialData.pk;
   }
 
   Future<void> _updateNews(CookieRequest request) async {
     final url =
-        Uri.parse("http://127.0.0.1:8000/news/edit-flutter/${widget.newsId}/");
+        Uri.parse("http://127.0.0.1:8000/news/edit-flutter/$_newsId/");
 
     try {
       // Headers: Sertakan cookie untuk otentikasi
