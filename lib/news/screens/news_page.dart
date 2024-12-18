@@ -79,9 +79,9 @@ class _NewsPageState extends State<NewsPage> {
               ),
               // padding: const EdgeInsets.symmetric(
               //     horizontal: 16.0, vertical: 12.0),
-            child: const Text('+',
-              style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold)),
+             child: const Icon(Icons.add,
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
             ),
           ]
         ],

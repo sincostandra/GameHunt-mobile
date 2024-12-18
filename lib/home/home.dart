@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 16), // Jarak antar tombol
             CupertinoButton(
               color: Colors.pink,
-              child: const Text("News"),
+              child: const Text("Game News"),
               onPressed: () {
                 Navigator.push(
                   context,
