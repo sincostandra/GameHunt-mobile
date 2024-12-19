@@ -4,6 +4,7 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:gamehunt/home/home.dart';
+import 'package:gamehunt/display/models/comment.dart'; // Adjust the import according to your project structure
 
 class GameDetailPage extends StatelessWidget {
   final Game game;
@@ -29,13 +30,12 @@ class GameDetailPage extends StatelessWidget {
             _buildDetailBox(context, "Genre", game.fields.genre),
             _buildDetailBox(context, "Ratings", game.fields.ratings.toString()),
             _buildDetailBox(context, "Harga", game.fields.harga.toString()),
-            _buildDetailBox(context, "Toko 1", game.fields.toko1),
-            _buildDetailBox(context, "Alamat 1", game.fields.alamat1),
-            if (game.fields.toko2 != null)
-              _buildDetailBox(context, "Toko 2", game.fields.toko2!),
-            if (game.fields.alamat2 != null)
-              _buildDetailBox(context, "Alamat 2", game.fields.alamat2!),
-            const SizedBox(height: 16),
+            _buildStoreBox(context, game.fields.toko1, game.fields.alamat1),
+            if (game.fields.toko2 != null && game.fields.toko2!.isNotEmpty)
+              _buildStoreBox(context, game.fields.toko2!, game.fields.alamat2!),
+            if (game.fields.toko3 != null && game.fields.toko3!.isNotEmpty)
+              _buildStoreBox(context, game.fields.toko3!, game.fields.alamat3!),
+                        const SizedBox(height: 16),
             _buildCommentForm(context),
             const SizedBox(height: 16),
             _buildCommentSection(context),
@@ -92,24 +92,59 @@ class GameDetailPage extends StatelessWidget {
                   onPressed: () {
                     // Handle See Reviews button press
                   },
-                  child: const Text('See Reviews'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow, // Background color
+                    foregroundColor: Colors.white, // Text color
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.star_rate, color: Colors.white), // Built-in icon
+                      const SizedBox(width: 8),
+                      const Text('See Reviews'),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
                     // Handle Wishlist button press
                   },
-                  child: const Text('Wishlist'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 41, 133, 209), // Background color
+                    foregroundColor: Colors.white, // Text color
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.favorite_border, color: Colors.white), // Built-in icon
+                      const SizedBox(width: 8),
+                      const Text('Wishlist'),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
           Positioned(
-            top: 16.0,
-            left: (MediaQuery.of(context).size.width * 0.9) / 2 - 60,
-            child: CircleAvatar(
-              radius: 60,
-              // backgroundImage: NetworkImage(game.fields.imageUrl), // Replace with your image URL
+            top: 0,
+            left: (MediaQuery.of(context).size.width * 0.9) / 2 - 60, // Center the larger image
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0), // Adjust the border radius as needed
+              child: Image.asset(
+                'images/logo.png', // Replace with your asset image path
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],
@@ -158,7 +193,7 @@ class GameDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCommentSection(BuildContext context) {
+  Widget _buildStoreBox(BuildContext context, String storeName, String address) {
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -177,26 +212,117 @@ class GameDetailPage extends StatelessWidget {
           ],
           border: Border.all(color: Colors.grey.withOpacity(0.5)),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            const Text(
-              'Comments',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            Container(
+              width: 80,
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.location_on, color: Colors.red, size: 40),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Available Store',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            _buildCommentItem('User1', 'This game is amazing!'),
-            _buildCommentItem('User2', 'I love the graphics and gameplay.'),
-            _buildCommentItem('User3', 'Could use some improvements in the storyline.'),
-            // Add more comments as needed
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    storeName,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    address,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildCommentSection(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
+    return FutureBuilder<List<CommentEntry>>(
+      future: fetchComment(request, game.pk),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text('Error loading comments'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No comments found'));
+        } else {
+          return Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              margin: const EdgeInsets.only(bottom: 16.0),
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Comments',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ...snapshot.data!.map((comment) => _buildCommentItem(comment.fields.name, comment.fields.body)).toList(),
+                ],
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Future<List<CommentEntry>> fetchComment(CookieRequest request, String gameId) async {
+    final response = await request.get('http://127.0.0.1:8000/display/show-json/$gameId/');
+    var data = response;
+    List<CommentEntry> listComment = [];
+    for (var d in data) {
+      if (d != null) {
+        listComment.add(CommentEntry.fromJson(d));
+      }
+    }
+    return listComment;
   }
 
   Widget _buildCommentItem(String username, String comment) {
@@ -225,7 +351,7 @@ class GameDetailPage extends StatelessWidget {
 
   Widget _buildCommentForm(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    String _content = "";
+    String _body = "";
 
     return Form(
       key: _formKey,
@@ -243,7 +369,7 @@ class GameDetailPage extends StatelessWidget {
                 ),
               ),
               onChanged: (String? value) {
-                _content = value!;
+                _body = value!;
               },
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
@@ -267,9 +393,10 @@ class GameDetailPage extends StatelessWidget {
                     final request = context.read<CookieRequest>();
                     // Kirim ke Django dan tunggu respons
                     final response = await request.postJson(
-                      "http://127.0.0.1:8000/create-flutter/",
+                      "http://127.0.0.1:8000/display/create-comment-flutter/",
                       jsonEncode(<String, String>{
-                        'content': _content,
+                        'body': _body,
+                        'game': game.pk,
                       }),
                     );
                     if (context.mounted) {
@@ -281,7 +408,7 @@ class GameDetailPage extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const HomePage()),
+                              builder: (context) => GameDetailPage(game: game)),
                         );
                       } else {
                         ScaffoldMessenger.of(context)
@@ -294,7 +421,7 @@ class GameDetailPage extends StatelessWidget {
                   }
                 },
                 child: const Text(
-                  "Save",
+                  "Post",
                   style: TextStyle(color: Colors.white),
                 ),
               ),
