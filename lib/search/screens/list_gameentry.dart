@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:gamehunt/search/screens/gameentry_form.dart';
 import 'package:gamehunt/search/screens/gameentry_edit_form.dart';
 import 'package:gamehunt/widgets/navbar.dart';
+import 'package:gamehunt/display/screens/game_details.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:gamehunt/wishlist/screens/wishlist_detail.dart';
@@ -305,25 +306,20 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    GestureDetector(
+                                    InkWell(
                                       onTap: () {
-                                        setState(() {
-                                          // Blink red effect
-                                          Future.delayed(
-                                              const Duration(milliseconds: 100),
-                                              () {
-                                            setState(() {
-                                              _navigateToWishlist(context, gameData.pk);
-                                            });
-                                          });
-                                        });
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => GameDetailPage(game: gameData, isAdmin: _isAdmin),
+                                          ),
+                                        );
                                       },
                                       child: Text(
                                         game.name,
                                         style: const TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.red, // Blink red effect
                                         ),
                                       ),
                                     ),
