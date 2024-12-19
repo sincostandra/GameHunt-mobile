@@ -10,6 +10,7 @@ import 'package:gamehunt/widgets/navbar.dart';
 import 'package:gamehunt/display/screens/game_details.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:gamehunt/wishlist/screens/wishlist_detail.dart';
 
 class GameEntryPage extends StatefulWidget {
   const GameEntryPage({super.key});
@@ -148,6 +149,13 @@ class _GameEntryPageState extends State<GameEntryPage> {
     } else if (_sortBy == 'price') {
       _filteredGames.sort((a, b) => a.fields.harga.compareTo(b.fields.harga));
     }
+  }
+
+   void _navigateToWishlist(BuildContext context, String gameId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WishlistDetailPage(gameId: gameId)),
+    );
   }
 
   @override

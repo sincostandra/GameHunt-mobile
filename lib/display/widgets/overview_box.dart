@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:gamehunt/models/game.dart'; // Adjust the import according to your project structure
+import 'package:gamehunt/models/game.dart';
+import 'package:gamehunt/wishlist/screens/wishlist_detail.dart';
 
 class OverviewBox extends StatelessWidget {
   final Game game;
 
   OverviewBox({required this.game});
+
+  void _navigateToWishlist(BuildContext context, String gameId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WishlistDetailPage(gameId: gameId)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +82,8 @@ class OverviewBox extends StatelessWidget {
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle Wishlist button press
+                    // Navigasi ke halaman wishlist
+                    _navigateToWishlist(context, game.pk);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 41, 133, 209), // Background color
