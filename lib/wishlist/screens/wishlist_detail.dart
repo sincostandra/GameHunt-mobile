@@ -19,14 +19,20 @@ class WishlistDetailPage extends StatelessWidget {
       }),
     );
 
-    if (response['status'] == 'success') {
-      _showSuccessDialog(context);
-    } else {
+    if (response['status'] == "error") {
       _showErrorDialog(context, response['message']);
+    } else {
+      _showWishlistDialog(context, response['status']);
     }
   }
 
-  void _showSuccessDialog(BuildContext context) {
+  void _showWishlistDialog(BuildContext context, String status) {
+    final bool isSuccess = status == 'success';
+    final String title = isSuccess ? 'Success' : 'Info';
+    final String content = isSuccess
+        ? 'Game added to wishlist successfully!'
+        : 'Game is already in your wishlist.';
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -34,36 +40,40 @@ class WishlistDetailPage extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          title: const Text(
-            'Success',
-            style: TextStyle(
+          title: Text(
+            title,
+            style: const TextStyle(
               color: Colors.red,
               fontWeight: FontWeight.bold,
             ),
           ),
-          content: const Text('Game added to wishlist successfully!'),
+          content: Text(content),
           actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'View Wishlist',
-                style: TextStyle(color: Colors.red),
+            if (isSuccess) 
+              TextButton(
+                child: const Text(
+                  'View Wishlist',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); 
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WishlistPage()),
+                  );
+                },
               ),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const WishlistPage()),
-                );
-              },
-            ),
             TextButton(
               child: const Text(
                 'OK',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                Navigator.pop(context); // Go back to the previous page
+                Navigator.of(context).pop();
+                if (isSuccess) {
+                  Navigator.pop(context); 
+                }
               },
             ),
           ],
@@ -96,6 +106,7 @@ class WishlistDetailPage extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.pop(context); 
               },
             ),
           ],
@@ -174,7 +185,7 @@ class WishlistDetailPage extends StatelessWidget {
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 40, 
+                      horizontal: 40,
                       vertical: 15,
                     ),
                     shape: RoundedRectangleBorder(

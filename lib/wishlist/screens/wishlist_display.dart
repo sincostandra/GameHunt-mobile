@@ -43,15 +43,13 @@ class _WishlistPageState extends State<WishlistPage> {
     try {
       final response = await http.delete(Uri.parse('http://127.0.0.1:8000/wishlist/delete-wishlist-flutter/$id/'));
       if (response.statusCode == 200) {
-        // Remove the item from the list with an animation
         final removedItem = wishlist[index];
         _listKey.currentState?.removeItem(
           index,
           (context, animation) => _buildAnimatedWishlistCard(removedItem, animation),
           duration: const Duration(milliseconds: 300),
         );
-        
-        // Update the wishlist after a short delay to allow animation to complete
+
         await Future.delayed(const Duration(milliseconds: 300));
         setState(() {
           wishlist.removeAt(index);
@@ -116,7 +114,6 @@ class _WishlistPageState extends State<WishlistPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Game Name
             Text(
               wishlistItem['game__name'],
               style: const TextStyle(
@@ -128,8 +125,6 @@ class _WishlistPageState extends State<WishlistPage> {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 12),
-
-            // Game Details
             _buildDetailRow(
               icon: Icons.developer_board,
               label: 'Developer',
@@ -160,10 +155,7 @@ class _WishlistPageState extends State<WishlistPage> {
               label: 'Address',
               value: wishlistItem['game__alamat1'],
             ),
-
             const SizedBox(height: 16),
-
-            // Remove Button
             Center(
               child: ElevatedButton.icon(
                 onPressed: () => removeFromWishlist(wishlistItem['id'], wishlist.indexOf(wishlistItem)),

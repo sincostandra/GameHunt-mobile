@@ -1,18 +1,15 @@
 import 'dart:convert';
-import 'package:gamehunt/models/game.dart';  // Import the Game model
+import 'package:gamehunt/models/game.dart';
 
-// Function to parse JSON into a List<Wishlist>
 List<Wishlist> wishlistFromJson(String str) =>
     List<Wishlist>.from(json.decode(str).map((x) => Wishlist.fromJson(x)));
 
-// Function to convert List<Wishlist> to JSON
 String wishlistToJson(List<Wishlist> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-// Main Wishlist Model
 class Wishlist {
   String id;
-  Game game;  // Connect to the Game model
+  Game game;
 
   Wishlist({
     required this.id,
@@ -30,13 +27,12 @@ class Wishlist {
       };
 }
 
-// GameDetails Model (Fields of the Game model in Django)
 class GameDetails {
   String name;
   String developer;
   String genre;
-  double price;  // Changing from int to double for price
-  double ratings;  // Ratings as double
+  double price;
+  double ratings;
 
   GameDetails({
     required this.name,
@@ -50,7 +46,7 @@ class GameDetails {
         name: json["name"],
         developer: json["developer"],
         genre: json["genre"],
-        price: (json["price"] as num).toDouble(),  // Ensure price is a double
+        price: (json["price"] as num).toDouble(),
         ratings: (json["ratings"] as num).toDouble(),
       );
 
