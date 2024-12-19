@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:gamehunt/search/screens/gameentry_form.dart';
 import 'package:gamehunt/search/screens/gameentry_edit_form.dart';
 import 'package:gamehunt/widgets/navbar.dart';
+import 'package:gamehunt/display/screens/game_details.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -297,11 +298,21 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      game.name,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold,
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => GameDetailPage(game: gameData, isAdmin: _isAdmin),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        game.name,
+                                        style: const TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 4),
