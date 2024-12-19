@@ -303,7 +303,7 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => GameDetailPage(game: gameData),
+                                            builder: (context) => GameDetailPage(game: gameData, isAdmin: _isAdmin),
                                           ),
                                         );
                                       },
