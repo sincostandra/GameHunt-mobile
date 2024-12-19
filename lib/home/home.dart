@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gamehunt/news/screens/news_page.dart';
 import '../search/screens/list_gameentry.dart';
 import '../userprofile/screens/user_profile_page.dart';
 import 'package:gamehunt/widgets/navbar.dart';
@@ -42,6 +43,19 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const GameEntryPage(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 16), // Jarak antar tombol
+            CupertinoButton(
+              color: Colors.pink,
+              child: const Text("Game News"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NewsPage(),
                   ),
                 );
               },
