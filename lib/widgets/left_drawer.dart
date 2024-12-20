@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gamehunt/news/screens/news_page.dart';
 import 'package:gamehunt/search/screens/list_gameentry.dart';
+import 'package:gamehunt/userprofile/screens/user_profile_page.dart';
+import 'package:gamehunt/wishlist/screens/wishlist_display.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -34,17 +37,31 @@ class LeftDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.article_outlined),
-            title: const Text('News'),
+            leading: const Icon(Icons.person),
+            title: const Text('Profile'),
             onTap: () {
-              // Belum diimplementasi - Placeholder
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("News belum diimplementasi")),
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserProfilePage(),
+                ),
               );
             },
           ),
           ListTile(
-            leading: const Icon(Icons.list_alt),
+            leading: const Icon(Icons.article_outlined),
+            title: const Text('News'),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NewsPage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.games),
             title: const Text('Browse Games'),
             onTap: () {
               Navigator.pushReplacement(
@@ -59,9 +76,11 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.favorite_outline),
             title: const Text('Wishlist'),
             onTap: () {
-              // Belum diimplementasi - Placeholder
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Wishlist belum diimplementasi")),
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const WishlistPage(),
+                ),
               );
             },
           ),
