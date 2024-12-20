@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamehunt/models/game.dart';
 import 'package:gamehunt/wishlist/screens/wishlist_detail.dart';
+import 'package:gamehunt/review/screens/review_list.dart';
 
 class OverviewBox extends StatelessWidget {
   final Game game;
@@ -11,6 +12,13 @@ class OverviewBox extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => WishlistDetailPage(gameId: gameId)),
+    );
+  }
+
+  void _navigateToReviews(BuildContext context, String gameId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ReviewPage(gameId: gameId)),
     );
   }
 
@@ -61,6 +69,7 @@ class OverviewBox extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     // Handle See Reviews button press
+                    _navigateToReviews(context, game.pk);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow, // Background color

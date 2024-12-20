@@ -140,13 +140,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             String password1 = _passwordController.text;
                             String password2 = _confirmPasswordController.text;
 
-                            final response = await request.postJson(
-                                "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/authentication/flutter-register/",
-                                jsonEncode({
-                                  "username": username,
-                                  "password1": password1,
-                                  "password2": password2,
-                                }));
+                            final response = await request.post(
+                              "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/authentication/flutter-register/",
+                              jsonEncode({
+                                'username': _usernameController.text,
+                                'password1': _passwordController.text,
+                                'password2': _confirmPasswordController.text
+                              }),
+                            );
                             if (context.mounted) {
                               if (response['status'] == 'success') {
                                 ScaffoldMessenger.of(context).showSnackBar(
