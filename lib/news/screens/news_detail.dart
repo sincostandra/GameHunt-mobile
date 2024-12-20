@@ -14,7 +14,7 @@ class NewsDetail extends StatelessWidget {
   final News news;
   final bool isAdmin;
 
-  const NewsDetail({Key? key, required this.news, required this.isAdmin}) : super(key: key);
+  const NewsDetail({super.key, required this.news, required this.isAdmin});
   final primaryColor = const Color(0xFFF44336);
 
   @override
@@ -28,83 +28,73 @@ class NewsDetail extends StatelessWidget {
         children: [
           if (isAdmin) ...[
             FloatingActionButton(
-            heroTag: null,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        NewsEditFormPage(initialData: news)),
-              );
-            },
+              heroTag: null,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          NewsEditFormPage(initialData: news)),
+                );
+              },
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
               // padding: const EdgeInsets.symmetric(
               //     horizontal: 16.0, vertical: 12.0),
-              child: const Icon(Icons.edit,
+              child: const Icon(
+                Icons.edit,
                 color: Color.fromARGB(255, 255, 255, 255),
               ),
-            // child: const Text('Edit News',
-            // textAlign: TextAlign.center,
-            //   style: TextStyle(
-            //       fontSize: 12, fontWeight: FontWeight.bold)),
+              // child: const Text('Edit News',
+              // textAlign: TextAlign.center,
+              //   style: TextStyle(
+              //       fontSize: 12, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
-            heroTag: null,
-            onPressed: () async {
-              // Karena tidak ada deleteJson, kita gunakan http.delete
-              final url = Uri.parse(
-                  "http://127.0.0.1:8000/news/delete-flutter/${news.pk}/");
-              final httpResponse =
-                  await http.delete(url);
-              if (httpResponse.statusCode ==
-                  200) {
-                final responseData = jsonDecode(
-                    httpResponse.body);
-                if (responseData['status'] ==
-                    'success') {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            const NewsPage()),
-                  );
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                          "Game successfully deleted!"),
-                    ),
-                  );
+              heroTag: null,
+              onPressed: () async {
+                // Karena tidak ada deleteJson, kita gunakan http.delete
+                final url = Uri.parse(
+                    "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/news/delete-flutter/${news.pk}/");
+                final httpResponse = await http.delete(url);
+                if (httpResponse.statusCode == 200) {
+                  final responseData = jsonDecode(httpResponse.body);
+                  if (responseData['status'] == 'success') {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NewsPage()),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Game successfully deleted!"),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Error deleting game."),
+                      ),
+                    );
+                  }
                 } else {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text(
-                          "Error deleting game."),
+                      content: Text("Error deleting game."),
                     ),
                   );
                 }
-              } else {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                        "Error deleting game."),
-                  ),
-                );
-              }
-            },
+              },
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
               // padding: const EdgeInsets.symmetric(
               //     horizontal: 16.0, vertical: 12.0),
-              child: const Icon(Icons.delete,
+              child: const Icon(
+                Icons.delete,
                 color: Color.fromARGB(255, 255, 255, 255),
               ),
             ),
@@ -115,13 +105,16 @@ class NewsDetail extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            Text(news.fields.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(news.fields.title,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(news.fields.author, style: TextStyle(fontSize: 12)),
+            Text(news.fields.author, style: const TextStyle(fontSize: 12)),
             const SizedBox(width: 10),
-            Text(news.fields.updateDate.toIso8601String(), style: TextStyle(fontSize: 12)),
+            Text(news.fields.updateDate.toIso8601String(),
+                style: const TextStyle(fontSize: 12)),
             const SizedBox(height: 8),
-            Text(news.fields.article, style: TextStyle(fontSize: 16)),
+            Text(news.fields.article, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {

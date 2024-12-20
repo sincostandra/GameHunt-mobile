@@ -66,7 +66,8 @@ class _FormModalDialogState extends State<FormModalDialog> {
     _email = widget.email;
     _isFiiled = widget.isFiiled;
 
-    _dateOfBirthController.text = _dateOfBirth.toLocal().toString().split(' ')[0];
+    _dateOfBirthController.text =
+        _dateOfBirth.toLocal().toString().split(' ')[0];
   }
 
   @override
@@ -81,26 +82,18 @@ class _FormModalDialogState extends State<FormModalDialog> {
       builder: (context) => AlertDialog(
         title: Text(
           titleText,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold
-          ),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         content: Text(value),
         actions: [
           TextButton(
             style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Colors.red.shade900),
-              shape: const WidgetStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10))
-                )
-              )
-            ),
+                backgroundColor: WidgetStatePropertyAll(Colors.red.shade900),
+                shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))))),
             child: const Text(
-              'OK', 
-              style: TextStyle(
-                color: Colors.white
-                ),
+              'OK',
+              style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -117,9 +110,8 @@ class _FormModalDialogState extends State<FormModalDialog> {
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: Colors.red)
-      ),
+          borderRadius: BorderRadius.circular(10),
+          side: const BorderSide(color: Colors.red)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: ListView(
@@ -128,12 +120,13 @@ class _FormModalDialogState extends State<FormModalDialog> {
             const Text(
               'Edit Profile',
               style: TextStyle(
-                fontSize: 27.5,
-                fontWeight: FontWeight.bold,
-                color: Colors.red
-              ),
+                  fontSize: 27.5,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             Form(
               key: _formKey,
               child: Column(
@@ -153,24 +146,30 @@ class _FormModalDialogState extends State<FormModalDialog> {
                     },
                     decoration: InputDecoration(
                       labelText: 'First Name',
-                      labelStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      labelStyle: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                       border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
                       focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red.shade900)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.red.shade900)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2.5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     initialValue: _lastName,
                     onChanged: (String? value) {
@@ -186,24 +185,30 @@ class _FormModalDialogState extends State<FormModalDialog> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Last Name',
-                      labelStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      labelStyle: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                       border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
                       focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red.shade900)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.red.shade900)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2.5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     initialValue: _description,
                     onChanged: (String? value) {
@@ -220,24 +225,30 @@ class _FormModalDialogState extends State<FormModalDialog> {
                     maxLines: 4,
                     decoration: InputDecoration(
                       labelText: 'Description',
-                      labelStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      labelStyle: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                       border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
                       focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red.shade900)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.red.shade900)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2.5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     controller: _dateOfBirthController,
                     readOnly: true,
@@ -252,33 +263,42 @@ class _FormModalDialogState extends State<FormModalDialog> {
                         setState(() {
                           _dateOfBirth = pickedDate;
                           // Update the controller with the new date
-                          _dateOfBirthController.text = _dateOfBirth.toIso8601String().split('T').first;
+                          _dateOfBirthController.text =
+                              _dateOfBirth.toIso8601String().split('T').first;
                         });
                       }
                     },
                     decoration: InputDecoration(
                       labelText: 'Birth of Date',
-                      labelStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      labelStyle: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                       suffixIcon: const Icon(Icons.calendar_today),
                       border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
                       focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red.shade900)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.red.shade900)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2.5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   DropdownButtonFormField<String>(
-                    value: _gender.isEmpty ? null : _gender, // set the initial value
+                    value: _gender.isEmpty
+                        ? null
+                        : _gender, // set the initial value
                     onChanged: (String? newValue) {
                       setState(() {
                         _gender = newValue!;
@@ -292,20 +312,24 @@ class _FormModalDialogState extends State<FormModalDialog> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Gender',
-                      labelStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      labelStyle: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                       border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
                       focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red.shade900)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.red.shade900)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2.5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                     items: <String>['Female', 'Male', 'Others']
@@ -316,7 +340,9 @@ class _FormModalDialogState extends State<FormModalDialog> {
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     initialValue: _location,
                     onChanged: (String? value) {
@@ -332,24 +358,30 @@ class _FormModalDialogState extends State<FormModalDialog> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Location',
-                      labelStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      labelStyle: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                       border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
                       focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red.shade900)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.red.shade900)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2.5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     initialValue: _phoneNumber,
@@ -363,30 +395,36 @@ class _FormModalDialogState extends State<FormModalDialog> {
                         return "Phone number must be filled";
                       }
                       if (int.tryParse(value) == null) {
-                      return "Phone number must be integer numbers!";
-                    }
+                        return "Phone number must be integer numbers!";
+                      }
                       return null;
                     },
                     decoration: InputDecoration(
                       labelText: 'Phone Number',
-                      labelStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      labelStyle: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                       border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
                       focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red.shade900)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.red.shade900)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2.5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     initialValue: _email,
                     onChanged: (String? value) {
@@ -405,24 +443,30 @@ class _FormModalDialogState extends State<FormModalDialog> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      labelStyle: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                       border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
                       focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red.shade900)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.red.shade900)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.red.shade900),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2.5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                  const SizedBox(height: 15,),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   Row(
                     children: [
                       Expanded(
@@ -434,74 +478,83 @@ class _FormModalDialogState extends State<FormModalDialog> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: ElevatedButton( 
+                              child: ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                      print(_dateOfBirthController.text);
-                                      final response = await request.postJson(
-                                        "http://127.0.0.1:8000/userprofile/userprofile/update-flutter",
-                                        jsonEncode(<String, dynamic>{
-                                          'description': _description,
-                                          'first_name': _firstName,
-                                          'last_name': _lastName,
-                                          'date_of_birth': "${_dateOfBirth.year.toString().padLeft(4, '0')}-${_dateOfBirth.month.toString().padLeft(2, '0')}-${_dateOfBirth.day.toString().padLeft(2, '0')}", // Format as YYYY-MM-DD,
-                                          'gender': _gender,
-                                          'location': _location,
-                                          'phone_number': _phoneNumber,
-                                          'email': _email,
-                                        }),
-                                      );
-                                      if (context.mounted) {
-                                          if (response['message'] == 'Profile updated successfully!') {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(const SnackBar(
-                                              content: Text("Profile updated successfully!"),
-                                              ));
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => const UserProfilePage()));
-                                          } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(const SnackBar(
-                                                  content:
-                                                      Text("Profile updated failed!"),
-                                              ));
-                                              print(response);
-                                          }
+                                    print(_dateOfBirthController.text);
+                                    final response = await request.postJson(
+                                      "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/userprofile/userprofile/update-flutter/",
+                                      jsonEncode(<String, dynamic>{
+                                        'description': _description,
+                                        'first_name': _firstName,
+                                        'last_name': _lastName,
+                                        'date_of_birth':
+                                            "${_dateOfBirth.year.toString().padLeft(4, '0')}-${_dateOfBirth.month.toString().padLeft(2, '0')}-${_dateOfBirth.day.toString().padLeft(2, '0')}", // Format as YYYY-MM-DD,
+                                        'gender': _gender,
+                                        'location': _location,
+                                        'phone_number': _phoneNumber,
+                                        'email': _email,
+                                      }),
+                                    );
+                                    if (context.mounted) {
+                                      if (response['message'] ==
+                                          'Profile updated successfully!') {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                              "Profile updated successfully!"),
+                                        ));
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const UserProfilePage()));
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content:
+                                              Text("Profile updated failed!"),
+                                        ));
+                                        print(response);
                                       }
+                                    }
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  minimumSize: const Size(double.infinity, 40),
-                                  backgroundColor: Colors.red.shade900,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)))),
-                                child: Text("Submit"),
+                                    foregroundColor: Colors.white,
+                                    minimumSize:
+                                        const Size(double.infinity, 40),
+                                    backgroundColor: Colors.red.shade900,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10)))),
+                                child: const Text("Submit"),
                               ),
                             ),
-                            const SizedBox(width: 10,),
+                            const SizedBox(
+                              width: 10,
+                            ),
                             Expanded(
-                              child: ElevatedButton( 
+                              child: ElevatedButton(
                                 onPressed: () {
                                   if (_isFiiled) {
                                     Navigator.pop(context);
-                                  }
-                                  else {
-                                    showCustomDialog("Form harus diisi", "Data profil anda kosong, maka form harus diisi");
+                                  } else {
+                                    showCustomDialog("Form harus diisi",
+                                        "Data profil anda kosong, maka form harus diisi");
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.red,
-                                  minimumSize: const Size(double.infinity, 40),
-                                  backgroundColor: Colors.white,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    side: BorderSide(color: Colors.red)
-                                  )
-                                ),
+                                    foregroundColor: Colors.red,
+                                    minimumSize:
+                                        const Size(double.infinity, 40),
+                                    backgroundColor: Colors.white,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10)),
+                                        side: BorderSide(color: Colors.red))),
                                 child: const Text("Cancel"),
                               ),
                             ),

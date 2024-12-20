@@ -41,7 +41,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   Future<UserProfile> fetchUserProfile(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/userprofile/userprofile/get');
+    final response = await request.get(
+        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/userprofile/userprofile/get/');
 
     var data = response;
 
@@ -53,8 +54,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
         firstName: data['profile']['first_name'] ?? '',
         lastName: data['profile']['last_name'] ?? '',
         dateOfBirth: data['profile']['date_of_birth'] != null
-          ? DateTime.parse(data['profile']['date_of_birth'])
-          : DateTime.now(),
+            ? DateTime.parse(data['profile']['date_of_birth'])
+            : DateTime.now(),
         gender: data['profile']['gender'] ?? '',
         location: data['profile']['location'] ?? '',
         phoneNumber: data['profile']['phone_number'] ?? '',
@@ -76,51 +77,46 @@ class _UserProfilePageState extends State<UserProfilePage> {
     _phoneNumber = data['profile']['phone_number'] ?? '';
     _email = data['profile']['email'] ?? '';
 
-     // Check if any profile field is empty and trigger a dialog if so
+    // Check if any profile field is empty and trigger a dialog if so
     bool isProfileIncomplete = data['profile']['username'] == null ||
-                              data['profile']['username'] == '' ||
-                              data['profile']['first_name'] == null ||
-                              data['profile']['first_name'] == '' ||
-                              data['profile']['last_name'] == null ||
-                              data['profile']['last_name'] == '' ||
-                              data['profile']['date_of_birth'] == null ||
-                              data['profile']['gender'] == null ||
-                              data['profile']['location'] == null ||
-                              data['profile']['phone_number'] == null ||
-                              data['profile']['email'] == null ||
-                              data['profile']['email'] == '';
+        data['profile']['username'] == '' ||
+        data['profile']['first_name'] == null ||
+        data['profile']['first_name'] == '' ||
+        data['profile']['last_name'] == null ||
+        data['profile']['last_name'] == '' ||
+        data['profile']['date_of_birth'] == null ||
+        data['profile']['gender'] == null ||
+        data['profile']['location'] == null ||
+        data['profile']['phone_number'] == null ||
+        data['profile']['email'] == null ||
+        data['profile']['email'] == '';
 
     if (isProfileIncomplete) {
       // Trigger the dialog to allow the user to complete their profile
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please fill this form"),
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Please fill this form"),
       ));
       showDialog(
-        context: context,
-        barrierDismissible: false, 
-        builder: (BuildContext context) {
-          return FormModalDialog(
-            isFiiled: false,
-            formKey: _formKey, 
-            dateOfBirthController: _dateOfBirthController, 
-            description: _description, 
-            firstName: _firstName, 
-            lastName: _lastName, 
-            dateOfBirth: _dateOfBirth, 
-            gender: _gender, 
-            location: _location, 
-            phoneNumber: _phoneNumber, 
-            email: _email
-          );
-        }
-      );
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return FormModalDialog(
+                isFiiled: false,
+                formKey: _formKey,
+                dateOfBirthController: _dateOfBirthController,
+                description: _description,
+                firstName: _firstName,
+                lastName: _lastName,
+                dateOfBirth: _dateOfBirth,
+                gender: _gender,
+                location: _location,
+                phoneNumber: _phoneNumber,
+                email: _email);
+          });
     }
-
 
     return newUserProfile;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -128,198 +124,197 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
     return Scaffold(
       body: FutureBuilder(
-        future: fetchUserProfile(request), 
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            if ((!snapshot.hasData)) {
-              return const Column(
-                children: [
-                  Text(
-                    'Tidak berhasil mendapatkan data',
-                    style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
-                  ),
-                  SizedBox(height: 8),
-                ],
-              );
+          future: fetchUserProfile(request),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null) {
+              return const Center(child: CircularProgressIndicator());
             } else {
-              UserProfile userProfile = snapshot.data!;
-              return buildProfile(userProfile, context, request);
+              if ((!snapshot.hasData)) {
+                return const Column(
+                  children: [
+                    Text(
+                      'Tidak berhasil mendapatkan data',
+                      style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                );
+              } else {
+                UserProfile userProfile = snapshot.data!;
+                return buildProfile(userProfile, context, request);
+              }
             }
-          }
-        }
-      ),
+          }),
     );
   }
 
   ListView buildProfile(
-    UserProfile userProfile, BuildContext context, CookieRequest request
-  ) {
+      UserProfile userProfile, BuildContext context, CookieRequest request) {
     return ListView(
       children: [
         Container(
-          height: 275,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/user_header_background.jpg'),
-              fit: BoxFit.cover
-            )
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                top: 20,
-                left: 20,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
-                    Icons.arrow_back,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context, 
-                      builder: (BuildContext context) {
-                        return FormModalDialog(
-                          formKey: _formKey, 
-                          dateOfBirthController: _dateOfBirthController, 
-                          description: _description, 
-                          firstName: _firstName, 
-                          lastName: _lastName, 
-                          dateOfBirth: _dateOfBirth, 
-                          gender: _gender, 
-                          location: _location, 
-                          phoneNumber: _phoneNumber, 
-                          email: _email
-                        );
-                      }
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.edit, size: 20,),
-                        SizedBox(width: 5,),
-                        Text(
-                          "Edit Profile", 
-                          style: TextStyle(fontWeight: FontWeight.bold),),
-                      ],
+            height: 275,
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image:
+                        AssetImage('assets/images/user_header_background.jpg'),
+                    fit: BoxFit.cover)),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 20,
+                  left: 20,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      Icons.arrow_back,
+                      size: 30,
+                      color: Colors.white,
                     ),
                   ),
                 ),
-              ),
-              Positioned.fill(
-                child: Transform.translate(
-                  offset: const Offset(0, 120),
-                  child: Transform.scale(
-                    scale: 0.6,
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return FormModalDialog(
+                                formKey: _formKey,
+                                dateOfBirthController: _dateOfBirthController,
+                                description: _description,
+                                firstName: _firstName,
+                                lastName: _lastName,
+                                dateOfBirth: _dateOfBirth,
+                                gender: _gender,
+                                location: _location,
+                                phoneNumber: _phoneNumber,
+                                email: _email);
+                          });
+                    },
                     child: Container(
-                      width: 80, 
-                      height: 80, 
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle, 
-                        color: Colors.red,
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/user_icon.png'),
-                          fit: BoxFit.fitHeight, 
-                        ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Edit Profile",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                    )
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
-        ),
+                Positioned.fill(
+                  child: Transform.translate(
+                    offset: const Offset(0, 120),
+                    child: Transform.scale(
+                        scale: 0.6,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red,
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/user_icon.png'),
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                        )),
+                  ),
+                ),
+              ],
+            )),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 50,),
+              const SizedBox(
+                height: 50,
+              ),
               ProfileSection(
-                header: "First Name", 
-                value: userProfile.profile!.firstName.toString()
-              ),
+                  header: "First Name",
+                  value: userProfile.profile!.firstName.toString()),
               const Divider(),
-               ProfileSection(
-                header: "Last Name", 
-                value: userProfile.profile!.lastName.toString()
-              ),
+              ProfileSection(
+                  header: "Last Name",
+                  value: userProfile.profile!.lastName.toString()),
               const Divider(),
-               ProfileSection(
-                header: "Date of Birth", 
-                value: userProfile.profile!.dateOfBirth!.toIso8601String().split('T').first
-              ),
+              ProfileSection(
+                  header: "Date of Birth",
+                  value: userProfile.profile!.dateOfBirth!
+                      .toIso8601String()
+                      .split('T')
+                      .first),
               const Divider(),
-               ProfileSection(
-                header: "Gender", 
-                value: userProfile.profile!.gender.toString()
-              ),
+              ProfileSection(
+                  header: "Gender",
+                  value: userProfile.profile!.gender.toString()),
               const Divider(),
-               ProfileSection(
-                header: "Location", 
-                value: userProfile.profile!.location.toString()
-              ),
+              ProfileSection(
+                  header: "Location",
+                  value: userProfile.profile!.location.toString()),
               const Divider(),
-               ProfileSection(
-                header: "Phone Number", 
-                value: userProfile.profile!.phoneNumber.toString()
-              ),
+              ProfileSection(
+                  header: "Phone Number",
+                  value: userProfile.profile!.phoneNumber.toString()),
               const Divider(),
-               ProfileSection(
-                header: "Email", 
-                value: userProfile.profile!.email.toString()
-              ),
+              ProfileSection(
+                  header: "Email",
+                  value: userProfile.profile!.email.toString()),
               const Divider(),
-              const SizedBox(height: 50,),
+              const SizedBox(
+                height: 50,
+              ),
               ElevatedButton(
                 onPressed: () async {
                   final response = await request.logout(
-                    "http://127.0.0.1:8000/authentication/flutter-logout/");
-                    String message = response["message"];
-                    if (context.mounted) {
-                        if (response['status']) {
-                            String uname = response["username"];
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text("$message Sampai jumpa, $uname."),
-                            ));
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => const LoginPage()),
-                            );
-                        } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(message),
-                                ),
-                            );
-                        }
+                      "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/authentication/flutter-logout/");
+                  String message = response["message"];
+                  if (context.mounted) {
+                    if (response['status']) {
+                      String uname = response["username"];
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("$message Sampai jumpa, $uname."),
+                      ));
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(message),
+                        ),
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  // minimumSize: Size(double.infinity, 50),
-                  backgroundColor: Colors.red.shade900,
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(10)))),
+                    foregroundColor: Colors.white,
+                    // minimumSize: Size(double.infinity, 50),
+                    backgroundColor: Colors.red.shade900,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)))),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -334,7 +329,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 30,)
+              const SizedBox(
+                height: 30,
+              )
             ],
           ),
         ),

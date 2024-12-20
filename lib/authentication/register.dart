@@ -57,8 +57,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             labelText: 'Username',
                             labelStyle: TextStyle(color: Colors.black),
                             hintText: 'Enter your username',
-                            hintStyle:
-                                TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 90, 90, 90)),
                             border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
@@ -84,8 +84,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             labelText: 'Password',
                             labelStyle: TextStyle(color: Colors.black),
                             hintText: 'Enter your password',
-                            hintStyle:
-                                TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 90, 90, 90)),
                             border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
@@ -112,8 +112,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             labelText: 'Confirm Password',
                             labelStyle: TextStyle(color: Colors.black),
                             hintText: 'Confirm your password',
-                            hintStyle:
-                                TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 90, 90, 90)),
                             border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
@@ -139,9 +139,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             String username = _usernameController.text;
                             String password1 = _passwordController.text;
                             String password2 = _confirmPasswordController.text;
-            
+
                             final response = await request.postJson(
-                                "http://127.0.0.1:8000/authentication/flutter-register/",
+                                "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/authentication/flutter-register/",
                                 jsonEncode({
                                   "username": username,
                                   "password1": password1,
@@ -172,7 +172,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               foregroundColor: Colors.black,
                               minimumSize: const Size(double.infinity, 50),
                               backgroundColor: Colors.red.shade900,
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
                               shape: const RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10)))),
@@ -187,10 +188,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Text("Sign In", style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white
-                              ))
+                              Text("Sign In",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white))
                             ],
                           ),
                         ),

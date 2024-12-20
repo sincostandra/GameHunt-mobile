@@ -26,7 +26,8 @@ class _WishlistPageState extends State<WishlistPage> {
   Future<void> fetchWishlist() async {
     final request = context.read<CookieRequest>();
     try {
-      final response = await request.get('http://127.0.0.1:8000/wishlist/get-wishlist/');
+      final response = await request.get(
+          'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/wishlist/get-wishlist/');
       setState(() {
         wishlist = response['wishlist'];
         _isLoading = false;
@@ -41,12 +42,14 @@ class _WishlistPageState extends State<WishlistPage> {
 
   Future<void> removeFromWishlist(String id, int index) async {
     try {
-      final response = await http.delete(Uri.parse('http://127.0.0.1:8000/wishlist/delete-wishlist-flutter/$id/'));
+      final response = await http.delete(Uri.parse(
+          'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/wishlist/delete-wishlist-flutter/$id/'));
       if (response.statusCode == 200) {
         final removedItem = wishlist[index];
         _listKey.currentState?.removeItem(
           index,
-          (context, animation) => _buildAnimatedWishlistCard(removedItem, animation),
+          (context, animation) =>
+              _buildAnimatedWishlistCard(removedItem, animation),
           duration: const Duration(milliseconds: 300),
         );
 
@@ -62,7 +65,8 @@ class _WishlistPageState extends State<WishlistPage> {
     }
   }
 
-  Widget _buildAnimatedWishlistCard(dynamic wishlistItem, Animation<double> animation) {
+  Widget _buildAnimatedWishlistCard(
+      dynamic wishlistItem, Animation<double> animation) {
     return SizeTransition(
       sizeFactor: animation,
       child: _buildWishlistCard(wishlistItem, isAnimating: true),
@@ -158,7 +162,8 @@ class _WishlistPageState extends State<WishlistPage> {
             const SizedBox(height: 16),
             Center(
               child: ElevatedButton.icon(
-                onPressed: () => removeFromWishlist(wishlistItem['id'], wishlist.indexOf(wishlistItem)),
+                onPressed: () => removeFromWishlist(
+                    wishlistItem['id'], wishlist.indexOf(wishlistItem)),
                 icon: const Icon(Icons.delete),
                 label: const Text('Remove from Wishlist'),
                 style: ElevatedButton.styleFrom(
@@ -220,7 +225,7 @@ class _WishlistPageState extends State<WishlistPage> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = const Color(0xFFF44336);
+    const primaryColor = Color(0xFFF44336);
 
     return Scaffold(
       appBar: Navbar(primaryColor: primaryColor),
@@ -233,7 +238,8 @@ class _WishlistPageState extends State<WishlistPage> {
                   key: _listKey,
                   initialItemCount: wishlist.length,
                   itemBuilder: (context, index, animation) {
-                    return _buildAnimatedWishlistCard(wishlist[index], animation);
+                    return _buildAnimatedWishlistCard(
+                        wishlist[index], animation);
                   },
                 ),
     );

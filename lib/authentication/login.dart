@@ -75,8 +75,8 @@ class _LoginPageState extends State<LoginPage> {
                             labelText: 'Username',
                             labelStyle: TextStyle(color: Colors.black),
                             hintText: 'Enter your username',
-                            hintStyle:
-                                TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 90, 90, 90)),
                             border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
@@ -96,8 +96,8 @@ class _LoginPageState extends State<LoginPage> {
                             labelText: 'Password',
                             labelStyle: TextStyle(color: Colors.black),
                             hintText: 'Enter your password',
-                            hintStyle:
-                                TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 90, 90, 90)),
                             border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
@@ -116,14 +116,14 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () async {
                             String username = _usernameController.text;
                             String password = _passwordController.text;
-        
+
                             final response = await request.login(
-                                "http://127.0.0.1:8000/authentication/flutter-login/",
+                                "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/authentication/flutter-login/",
                                 {
                                   'username': username,
                                   'password': password,
                                 });
-        
+
                             if (request.loggedIn) {
                               String message = response['message'];
                               String uname = response['username'];
@@ -149,25 +149,24 @@ class _LoginPageState extends State<LoginPage> {
                                     title: const Text(
                                       'Login Gagal',
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold
-                                      ),
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     content: Text(response['message']),
                                     actions: [
                                       TextButton(
                                         style: ButtonStyle(
-                                          backgroundColor: WidgetStatePropertyAll(Colors.red.shade900),
-                                          shape: const WidgetStatePropertyAll(
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(Radius.circular(10))
-                                            )
-                                          )
-                                        ),
+                                            backgroundColor:
+                                                WidgetStatePropertyAll(
+                                                    Colors.red.shade900),
+                                            shape: const WidgetStatePropertyAll(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10))))),
                                         child: const Text(
-                                          'OK', 
-                                          style: TextStyle(
-                                            color: Colors.white
-                                            ),
+                                          'OK',
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                         onPressed: () {
                                           Navigator.pop(context);
@@ -183,7 +182,8 @@ class _LoginPageState extends State<LoginPage> {
                               foregroundColor: Colors.white,
                               minimumSize: const Size(double.infinity, 50),
                               backgroundColor: Colors.red.shade900,
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
                               shape: const RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10)))),

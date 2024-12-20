@@ -9,10 +9,12 @@ class CommentSection extends StatelessWidget {
   final Game game;
   final bool isAdmin;
 
-  CommentSection({required this.game, required this.isAdmin});
+  const CommentSection({super.key, required this.game, required this.isAdmin});
 
-  Future<List<CommentEntry>> fetchComment(CookieRequest request, String gameId) async {
-    final response = await request.get('http://127.0.0.1:8000/display/show-json/$gameId/');
+  Future<List<CommentEntry>> fetchComment(
+      CookieRequest request, String gameId) async {
+    final response = await request.get(
+        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/display/show-json/$gameId/');
     var data = response;
     List<CommentEntry> listComment = [];
     for (var d in data) {
@@ -68,10 +70,7 @@ class CommentSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ...snapshot.data!.map((comment) => CommentItem(
-                    comment: comment,
-                    isAdmin: isAdmin,
-                    game: game
-                  )).toList(),
+                      comment: comment, isAdmin: isAdmin, game: game)),
                 ],
               ),
             ),

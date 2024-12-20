@@ -12,11 +12,11 @@ class LeftDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          DrawerHeader(
+          const DrawerHeader(
             decoration: BoxDecoration(
-              color: const Color(0xFFF44336),
+              color: Color(0xFFF44336),
             ),
-            child: const Column(
+            child: Column(
               children: [
                 Icon(
                   Icons.games,

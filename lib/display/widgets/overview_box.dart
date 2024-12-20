@@ -5,7 +5,7 @@ import 'package:gamehunt/wishlist/screens/wishlist_detail.dart';
 class OverviewBox extends StatelessWidget {
   final Game game;
 
-  OverviewBox({required this.game});
+  const OverviewBox({super.key, required this.game});
 
   void _navigateToWishlist(BuildContext context, String gameId) {
     Navigator.push(
@@ -70,12 +70,12 @@ class OverviewBox extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.star_rate, color: Colors.white), // Built-in icon
-                      const SizedBox(width: 8),
-                      const Text('See Reviews'),
+                      SizedBox(width: 8),
+                      Text('See Reviews'),
                     ],
                   ),
                 ),
@@ -93,12 +93,12 @@ class OverviewBox extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.favorite_border, color: Colors.white), // Built-in icon
-                      const SizedBox(width: 8),
-                      const Text('Wishlist'),
+                      SizedBox(width: 8),
+                      Text('Wishlist'),
                     ],
                   ),
                 ),
