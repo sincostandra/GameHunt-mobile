@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamehunt/models/game.dart';
+import 'package:gamehunt/review/models/review.dart';
+import 'package:gamehunt/review/screens/review_list.dart';
 import 'package:gamehunt/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -325,6 +327,18 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    const SizedBox(height: 8),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ReviewPage(gameId: gameData.pk),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Go to Review'),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -395,25 +409,21 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                                 200) {
                                               final responseData =
                                                   jsonDecode(httpResponse.body);
-                                              if (responseData['status'] ==
-                                                  'success') {
+                                              if (responseData['status'] == 'success') {
                                                 setState(() {
-                                                  _filteredGames
-                                                      .removeAt(index);
+                                                  _filteredGames.removeAt(index);
                                                 });
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   const SnackBar(
-                                                    content: Text(
-                                                        "Game successfully deleted!"),
+                                                    content: Text("Game successfully deleted!"),
                                                   ),
                                                 );
                                               } else {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   const SnackBar(
-                                                    content: Text(
-                                                        "Error deleting game."),
+                                                    content: Text("Error deleting game."),
                                                   ),
                                                 );
                                               }
@@ -421,8 +431,7 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 const SnackBar(
-                                                  content: Text(
-                                                      "Error deleting game."),
+                                                  content: Text("Error deleting game."),
                                                 ),
                                               );
                                             }
