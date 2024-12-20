@@ -9,15 +9,15 @@ class CommentForm extends StatelessWidget {
   final Game game;
   final bool isAdmin;
 
-  CommentForm({required this.game, required this.isAdmin});
+  const CommentForm({super.key, required this.game, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    String _body = "";
+    final formKey = GlobalKey<FormState>();
+    String body = "";
 
     return Form(
-      key: _formKey,
+      key: formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -32,7 +32,7 @@ class CommentForm extends StatelessWidget {
                 ),
               ),
               onChanged: (String? value) {
-                _body = value!;
+                body = value!;
               },
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
@@ -48,17 +48,17 @@ class CommentForm extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(
                       Theme.of(context).colorScheme.primary),
                 ),
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
+                  if (formKey.currentState!.validate()) {
                     final request = context.read<CookieRequest>();
                     // Kirim ke Django dan tunggu respons
                     final response = await request.postJson(
-                      "http://127.0.0.1:8000/display/create-comment-flutter/",
+                      "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/display/create-comment-flutter/",
                       jsonEncode(<String, String>{
-                        'body': _body,
+                        'body': body,
                         'game': game.pk.toString(),
                       }),
                     );
@@ -71,13 +71,13 @@ class CommentForm extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => GameDetailPage(game: game, isAdmin: isAdmin)),
+                              builder: (context) =>
+                                  GameDetailPage(game: game, isAdmin: isAdmin)),
                         );
                       } else {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
-                          content:
-                              Text("Error, please try again."),
+                          content: Text("Error, please try again."),
                         ));
                       }
                     }

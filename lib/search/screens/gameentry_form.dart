@@ -29,7 +29,7 @@ class _GameEntryFormPageState extends State<GameEntryFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = const Color(0xFFF44336);
+    const primaryColor = Color(0xFFF44336);
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: Navbar(primaryColor: primaryColor),
@@ -136,13 +136,13 @@ class _GameEntryFormPageState extends State<GameEntryFormPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
+                      backgroundColor: WidgetStateProperty.all(
                           Theme.of(context).colorScheme.primary),
                     ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         final response = await request.postJson(
-                          "http://127.0.0.1:8000/create-game-flutter/",
+                          "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/create-game-flutter/",
                           jsonEncode(<String, dynamic>{
                             'name': _name,
                             'year': _year,

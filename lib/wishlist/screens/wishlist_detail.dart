@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'wishlist_display.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -13,7 +12,7 @@ class WishlistDetailPage extends StatelessWidget {
   Future<void> _addToWishlist(BuildContext context) async {
     final request = context.read<CookieRequest>();
     final response = await request.postJson(
-      'http://127.0.0.1:8000/wishlist/add-wishlist-ajax/',
+      'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/wishlist/add-wishlist-ajax/',
       jsonEncode(<String, dynamic>{
         'game_id': gameId,
       }),
@@ -49,14 +48,14 @@ class WishlistDetailPage extends StatelessWidget {
           ),
           content: Text(content),
           actions: <Widget>[
-            if (isSuccess) 
+            if (isSuccess)
               TextButton(
                 child: const Text(
                   'View Wishlist',
                   style: TextStyle(color: Colors.red),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop(); 
+                  Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -72,7 +71,7 @@ class WishlistDetailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
                 if (isSuccess) {
-                  Navigator.pop(context); 
+                  Navigator.pop(context);
                 }
               },
             ),
@@ -106,7 +105,7 @@ class WishlistDetailPage extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.pop(context); 
+                Navigator.pop(context);
               },
             ),
           ],

@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final primaryColor = const Color(0xFFF44336);
+    const primaryColor = Color(0xFFF44336);
     return Scaffold(
       appBar: Navbar(primaryColor: primaryColor),
       body: Center(

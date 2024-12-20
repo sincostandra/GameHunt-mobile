@@ -12,6 +12,6 @@ class WishlistEntryFormPage extends StatefulWidget {
 class _WishlistEntryFormPageState extends State<WishlistEntryFormPage> {
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return const Placeholder();
   }
 }

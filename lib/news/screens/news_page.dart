@@ -3,9 +3,9 @@ import 'package:gamehunt/news/models/news_model.dart';
 import 'package:gamehunt/news/screens/news_form.dart';
 import 'package:gamehunt/news/widgets/news_box.dart';
 import 'package:gamehunt/widgets/navbar.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart'; 
+import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:gamehunt/news/screens/news_detail.dart'; 
+import 'package:gamehunt/news/screens/news_detail.dart';
 import 'package:gamehunt/widgets/left_drawer.dart';
 
 class NewsPage extends StatefulWidget {
@@ -19,11 +19,12 @@ class _NewsPageState extends State<NewsPage> {
   bool _isAdmin = false;
   Future<List<News>> fetchNews(CookieRequest request) async {
     // Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-    final response = await request.get('http://127.0.0.1:8000/news/json/');
-    
+    final response = await request
+        .get('https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/news/json/');
+
     // Melakukan decode response menjadi bentuk json
     var data = response;
-    
+
     // Melakukan konversi data json menjadi object NewsEntry
     List<News> listNews = [];
     for (var d in data) {
@@ -34,10 +35,11 @@ class _NewsPageState extends State<NewsPage> {
     return listNews;
   }
 
-    Future<void> _fetchUserRole() async {
+  Future<void> _fetchUserRole() async {
     final request = context.read<CookieRequest>();
     try {
-      final response = await request.get('http://127.0.0.1:8000/user-role/');
+      final response = await request
+          .get('https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/user-role/');
       setState(() {
         _isAdmin = response['role'] == 'admin'; // Cek role user
       });
@@ -46,7 +48,7 @@ class _NewsPageState extends State<NewsPage> {
     }
   }
 
-    @override
+  @override
   void initState() {
     super.initState();
     _fetchUserRole();
@@ -55,7 +57,7 @@ class _NewsPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    final primaryColor = const Color(0xFFF44336);
+    const primaryColor = Color(0xFFF44336);
 
     return Scaffold(
       appBar: Navbar(primaryColor: primaryColor),
@@ -65,21 +67,20 @@ class _NewsPageState extends State<NewsPage> {
         children: [
           if (_isAdmin) ...[
             FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const NewsFormPage()),
-              );
-            },
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NewsFormPage()),
+                );
+              },
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
               // padding: const EdgeInsets.symmetric(
               //     horizontal: 16.0, vertical: 12.0),
-             child: const Icon(Icons.add,
+              child: const Icon(
+                Icons.add,
                 color: Color.fromARGB(255, 255, 255, 255),
               ),
             ),
@@ -104,22 +105,22 @@ class _NewsPageState extends State<NewsPage> {
               );
             } else {
               return ListView.builder(
-  itemCount: snapshot.data!.length,
-  itemBuilder: (_, index) {
-    final news = snapshot.data![index];
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewsDetail(news: news, isAdmin: _isAdmin),
-          ),
-        );
-      },
-      child: NewsBox(news: news)
-    );
-  },
-);
+                itemCount: snapshot.data!.length,
+                itemBuilder: (_, index) {
+                  final news = snapshot.data![index];
+                  return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                NewsDetail(news: news, isAdmin: _isAdmin),
+                          ),
+                        );
+                      },
+                      child: NewsBox(news: news));
+                },
+              );
             }
           }
         },

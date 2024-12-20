@@ -10,8 +10,7 @@ import 'package:provider/provider.dart';
 class NewsEditFormPage extends StatefulWidget {
   final News initialData;
 
-  const NewsEditFormPage(
-      {super.key, required this.initialData});
+  const NewsEditFormPage({super.key, required this.initialData});
 
   @override
   State<NewsEditFormPage> createState() => _NewsEditFormPageState();
@@ -35,8 +34,8 @@ class _NewsEditFormPageState extends State<NewsEditFormPage> {
   }
 
   Future<void> _updateNews(CookieRequest request) async {
-    final url =
-        Uri.parse("http://127.0.0.1:8000/news/edit-flutter/$_newsId/");
+    final url = Uri.parse(
+        "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/news/edit-flutter/$_newsId/");
 
     try {
       // Headers: Sertakan cookie untuk otentikasi
@@ -63,10 +62,9 @@ class _NewsEditFormPageState extends State<NewsEditFormPage> {
             const SnackBar(content: Text("News successfully updated!")),
           );
           Navigator.push(
-            context, 
-            MaterialPageRoute(
-            builder: (context) =>
-                const NewsPage()),);
+            context,
+            MaterialPageRoute(builder: (context) => const NewsPage()),
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Error: ${responseData['message']}")),
@@ -88,7 +86,7 @@ class _NewsEditFormPageState extends State<NewsEditFormPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    final primaryColor = const Color(0xFFF44336);
+    const primaryColor = Color(0xFFF44336);
     return Scaffold(
       appBar: Navbar(primaryColor: primaryColor),
       body: Form(
@@ -124,7 +122,7 @@ class _NewsEditFormPageState extends State<NewsEditFormPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
+                      backgroundColor: WidgetStateProperty.all(
                           Theme.of(context).colorScheme.primary),
                     ),
                     onPressed: () {
