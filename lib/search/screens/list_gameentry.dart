@@ -36,7 +36,8 @@ class _GameEntryPageState extends State<GameEntryPage> {
   Future<void> _fetchUserRole() async {
     final request = context.read<CookieRequest>();
     try {
-      final response = await request.get('http://127.0.0.1:8000/user-role/');
+      final response = await request
+          .get('https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/user-role/');
       setState(() {
         _isAdmin = response['role'] == 'admin'; // Cek role user
       });
@@ -49,7 +50,8 @@ class _GameEntryPageState extends State<GameEntryPage> {
     final request = context.read<CookieRequest>();
     try {
       // Ambil data dari API
-      final response = await request.get('http://127.0.0.1:8000/search/json/');
+      final response = await request
+          .get('https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/search/json/');
 
       // print("Raw response: $response");
 
@@ -151,16 +153,17 @@ class _GameEntryPageState extends State<GameEntryPage> {
     }
   }
 
-   void _navigateToWishlist(BuildContext context, String gameId) {
+  void _navigateToWishlist(BuildContext context, String gameId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WishlistDetailPage(gameId: gameId)),
+      MaterialPageRoute(
+          builder: (context) => WishlistDetailPage(gameId: gameId)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = const Color(0xFFF44336);
+    const primaryColor = Color(0xFFF44336);
     final request = context
         .watch<CookieRequest>(); // Pastikan request didefinisikan di sini
 
@@ -311,7 +314,10 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => GameDetailPage(game: gameData, isAdmin: _isAdmin),
+                                            builder: (context) =>
+                                                GameDetailPage(
+                                                    game: gameData,
+                                                    isAdmin: _isAdmin),
                                           ),
                                         );
                                       },
@@ -446,7 +452,7 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                             onPressed: () async {
                                               // Karena tidak ada deleteJson, kita gunakan http.delete
                                               final url = Uri.parse(
-                                                  "http://127.0.0.1:8000/delete-game-flutter/${gameData.pk}/");
+                                                  "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/delete-game-flutter/${gameData.pk}/");
                                               final httpResponse =
                                                   await http.delete(url);
                                               if (httpResponse.statusCode ==

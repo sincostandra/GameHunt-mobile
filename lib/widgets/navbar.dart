@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Navbar extends StatelessWidget implements PreferredSizeWidget {
   final Color primaryColor;
 
-  const Navbar({Key? key, required this.primaryColor}) : super(key: key);
+  const Navbar({super.key, required this.primaryColor});
 
   @override
   Widget build(BuildContext context) {
@@ -11,13 +11,13 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: primaryColor,
       elevation: 0,
       centerTitle: true, // Ini memastikan judul di tengah
-      title: Row(
+      title: const Row(
         mainAxisSize:
             MainAxisSize.min, // Supaya item di dalam Row tetap di tengah
         children: [
-          const Icon(Icons.games, color: Colors.white),
-          const SizedBox(width: 8),
-          const Text(
+          Icon(Icons.games, color: Colors.white),
+          SizedBox(width: 8),
+          Text(
             'GameHunt',
             style: TextStyle(
               color: Colors.white,

@@ -4,7 +4,7 @@ class StoreBox extends StatelessWidget {
   final String storeName;
   final String address;
 
-  StoreBox({required this.storeName, required this.address});
+  const StoreBox({super.key, required this.storeName, required this.address});
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +31,12 @@ class StoreBox extends StatelessWidget {
             Container(
               width: 80,
               color: Colors.white,
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.location_on, color: Colors.red, size: 40),
-                  const SizedBox(height: 8),
-                  const Text(
+                  SizedBox(height: 8),
+                  Text(
                     'Available Store',
                     style: TextStyle(
                       color: Colors.red,

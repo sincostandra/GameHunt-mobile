@@ -52,8 +52,8 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
   }
 
   Future<void> _updateGame(CookieRequest request) async {
-    final url =
-        Uri.parse("http://127.0.0.1:8000/edit-game-flutter/${widget.gameId}/");
+    final url = Uri.parse(
+        "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/edit-game-flutter/${widget.gameId}/");
 
     try {
       // Headers: Sertakan cookie untuk otentikasi
@@ -110,7 +110,7 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    final primaryColor = const Color(0xFFF44336);
+    const primaryColor = Color(0xFFF44336);
     return Scaffold(
       appBar: Navbar(primaryColor: primaryColor),
       body: Form(
@@ -218,7 +218,7 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
+                      backgroundColor: WidgetStateProperty.all(
                           Theme.of(context).colorScheme.primary),
                     ),
                     onPressed: () {

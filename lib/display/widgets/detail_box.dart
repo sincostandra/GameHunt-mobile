@@ -4,7 +4,7 @@ class DetailBox extends StatelessWidget {
   final String title;
   final String content;
 
-  DetailBox({required this.title, required this.content});
+  const DetailBox({super.key, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
