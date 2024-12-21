@@ -3,8 +3,17 @@ import 'package:gamehunt/review/models/review.dart';
 
 class ReviewCard extends StatelessWidget {
   final Review review;
+  final bool isAdmin;
+  final String currentUsername;
+  final Function(int reviewId) onDeleteReview;
 
-  const ReviewCard({super.key, required this.review});
+  const ReviewCard({
+    super.key, 
+    required this.review, 
+    required this.isAdmin,
+    required this.currentUsername,
+    required this.onDeleteReview,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +22,8 @@ class ReviewCard extends StatelessWidget {
     const Color primaryRed = Color(0xFFFF5252);
     const Color darkBlue = Color(0xFF1C1E26);
 
+    final canDelete = isAdmin || (review.username == currentUsername);  
+
     return Card(
       color: darkBlue,
       shape: RoundedRectangleBorder(
@@ -20,11 +31,10 @@ class ReviewCard extends StatelessWidget {
         side: const BorderSide(color: primaryRed, width: 1),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Username and Score
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -36,62 +46,35 @@ class ReviewCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  'Score: ${review.score}',
-                  style: const TextStyle(
-                    color: primaryRed,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                if (canDelete) // Only show delete button if canDelete is true
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: primaryRed),
+                    onPressed: () => onDeleteReview(review.id),
                   ),
-                ),
               ],
             ),
             const SizedBox(height: 8),
             // Title
             Text(
               review.title,
-              style: const TextStyle(
-                color: white,
-                fontSize: 18,
-              ),
+              style: const TextStyle(color: white, fontSize: 16),
             ),
             const SizedBox(height: 8),
-            // Content  
+            // Score + content
             Text(
-              review.content,
-              style: const TextStyle(
-                color: lightGray,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.justify,
+              "Score: ${review.score}\n${review.content}",
+              style: const TextStyle(color: lightGray, fontSize: 14),
             ),
             const SizedBox(height: 8),
-            // Date
-            Text(
-              review.date,
-              style: const TextStyle(
-                color: lightGray,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 8),
-            // Vote Score
+            // Date + Voting
             Row(
               children: [
-                const Icon(Icons.thumb_up, color: primaryRed, size: 20),
-                const SizedBox(width: 4),
                 Text(
-                  '${review.voteScore}',
-                  style: const TextStyle(
-                    color: lightGray,
-                    fontSize: 16,
-                  ),
+                  review.date,
+                  style: const TextStyle(color: lightGray, fontSize: 12),
                 ),
                 const Spacer(),
-                if (review.userUpvoted)
-                  const Icon(Icons.arrow_upward, color: primaryRed, size: 20),
-                if (review.userDownvoted)
-                  const Icon(Icons.arrow_downward, color: primaryRed, size: 20),
+                // Dst ...
               ],
             ),
           ],

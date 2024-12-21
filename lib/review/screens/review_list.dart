@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gamehunt/review/models/review.dart';
 import 'package:gamehunt/models/game.dart';
-import 'package:gamehunt/review/screens/add_review.dart';
 import 'package:gamehunt/review/widgets/game_info_card.dart';
 import 'package:gamehunt/review/widgets/review_card.dart';
+import 'package:gamehunt/review/screens/add_review.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ReviewPage extends StatefulWidget {
   final String gameId;
-
   const ReviewPage({super.key, required this.gameId});
 
   @override
@@ -23,25 +24,42 @@ class _ReviewPageState extends State<ReviewPage> {
   bool isLoading = true;
   String? error;
 
+  bool isAdmin = false;
+  String currentUsername = "";
+
   @override
   void initState() {
     super.initState();
     fetchData();
   }
 
-  Future<void> fetchData() async {
+  Future<void> fetchUserData() async {
     final request = context.read<CookieRequest>();
     try {
+      final response = await request.get('http://127.0.0.1:8000/review/get_user_role');
+      setState(() {
+        isAdmin = response['role'] == 'admin';
+        currentUsername = response['username'] ?? "";
+      });
+    } catch (e) {
+      print('Error fetching user role: $e');
+    }
+  }
+
+  Future<void> fetchData() async {
+    setState(() { isLoading = true; });
+    final request = context.read<CookieRequest>();
+    try {
+      await fetchUserData();
+
       final gameResponse = await request.get(
-        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/search/json/${widget.gameId}',
+        'http://127.0.0.1:8000/search/json/${widget.gameId}',
       );
-      
       final allResponse = await request.get(
-        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/get_review_json/${widget.gameId}',
+        'http://127.0.0.1:8000/review/get_review_json/${widget.gameId}',
       );
-      
       final userResponse = await request.get(
-        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/get_user_review/${widget.gameId}',
+        'http://127.0.0.1:8000/review/get_user_review/${widget.gameId}',
       );
 
       setState(() {
@@ -64,26 +82,72 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
+  Future<void> _deleteReview(int reviewId) async {
+  final request = context.read<CookieRequest>();
+  final url = Uri.parse("http://127.0.0.1:8000/review/delete_review_flutter/$reviewId/");
+  
+  // If it's user's own review, update state immediately
+  if (userReview?.id == reviewId) {
+    setState(() {
+      userReview = null;  // Clear user review first
+    });
+  }
+
+  try {
+    final response = await http.delete(
+      url,
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      if (responseData['status'] == 'success') {
+        await fetchData(); // Refresh data
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Review deleted successfully')),
+        );
+      }
+    }
+  } catch (e) {
+    // If error, revert the state
+    if (userReview == null) {
+      await fetchData();
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error: $e')),
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
-    const Color primaryRed = Color(0xFFFF5252);
-    const Color darkBlue = Color(0xFF1C1E26);
-    const Color lightGray = Color(0xFFD1D1D1);
+    const primaryRed = Color(0xFFFF5252);
+    const darkBlue = Color(0xFF1C1E26);
+    const lightGray = Color(0xFFD1D1D1);
 
     return Scaffold(
+      appBar: AppBar(
+      backgroundColor: primaryRed,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: const Text(
+        'Reviews',
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
       backgroundColor: Colors.white,
-      body: isLoading 
+      body: isLoading
           ? const Center(child: CircularProgressIndicator(color: primaryRed))
           : error != null
               ? Center(child: Text(error!, style: TextStyle(color: darkBlue)))
               : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (game != null) GameInfoCard(game: game!),
                       const SizedBox(height: 24),
-                      
                       const Text(
                         'Your Review',
                         style: TextStyle(
@@ -93,21 +157,17 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
                       userReview == null
                           ? SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // TODO: Navigate to add review page
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => AddReviewPage(gameId: widget.gameId),
                                     ),
                                   ).then((value) {
-                                    // Jika value == true, berarti berhasil menambahkan
-                                    // Panggil ulang fetchData() agar tampilan tersinkron
                                     if (value == true) {
                                       fetchData();
                                     }
@@ -123,22 +183,23 @@ class _ReviewPageState extends State<ReviewPage> {
                                 child: const Text(
                                   'Add Review',
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold
                                   ),
                                 ),
                               ),
                             )
                           : Column(
                               children: [
-                                ReviewCard(review: userReview!),
+                                ReviewCard(
+                                  review: userReview!,
+                                  isAdmin: isAdmin,
+                                  currentUsername: currentUsername,
+                                  onDeleteReview: _deleteReview,
+                                ),
                                 const Divider(color: primaryRed),
                               ],
                             ),
-                      
                       const SizedBox(height: 24),
-                      
                       const Text(
                         'Other Reviews',
                         style: TextStyle(
@@ -148,40 +209,33 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
-                      // Filter out user's review from other reviews
-                      reviews.where((review) => 
-                        userReview == null || review.id != userReview!.id
-                      ).isEmpty
+                      reviews.where((review) => userReview == null || review.id != userReview!.id).isEmpty
                           ? const Center(
                               child: Column(
                                 children: [
-                                  Icon(Icons.mail_outline, 
-                                       color: lightGray, 
-                                       size: 80),
+                                  Icon(Icons.mail_outline, color: lightGray, size: 80),
                                   SizedBox(height: 16),
                                   Text(
                                     'No other reviews yet.',
-                                    style: TextStyle(
-                                      color: lightGray, 
-                                      fontSize: 16
-                                    ),
+                                    style: TextStyle(color: lightGray, fontSize: 16),
                                   ),
                                 ],
                               ),
                             )
                           : Column(
                               children: reviews
-                                  .where((review) => 
-                                    userReview == null || 
-                                    review.id != userReview!.id
-                                  )
+                                  .where((review) => userReview == null || review.id != userReview!.id)
                                   .map((review) => Column(
-                                    children: [
-                                      ReviewCard(review: review),
-                                      const Divider(color: primaryRed),
-                                    ],
-                                  ))
+                                        children: [
+                                          ReviewCard(
+                                            review: review,
+                                            isAdmin: isAdmin,
+                                            currentUsername: currentUsername,
+                                            onDeleteReview: _deleteReview,
+                                          ),
+                                          const Divider(color: primaryRed),
+                                        ],
+                                      ))
                                   .toList(),
                             ),
                     ],

@@ -13,31 +13,30 @@ class AddReviewPage extends StatefulWidget {
 
 class _AddReviewPageState extends State<AddReviewPage> {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _scoreController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
+  int _selectedScore = 0; // Menyimpan rating bintang (1–5)
   bool isLoading = false;
 
   Future<void> submitReview() async {
-    setState(() { isLoading = true; });
+    setState(() {
+      isLoading = true;
+    });
 
     final request = context.read<CookieRequest>();
     try {
-      // Pastikan URL di bawah sesuai dengan urls.py Anda
       final response = await request.post(
-        "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/create_review_ajax/${widget.gameId}",
+        "http://127.0.0.1:8000/review/create_review_ajax/${widget.gameId}",
         {
           'title': _titleController.text,
-          'score': _scoreController.text,    // Pastikan "score" bisa di-casting ke int di sisi Django
-          'content': _contentController.text
+          'score': _selectedScore.toString(), // Kirim rating
+          'content': _contentController.text,
         },
       );
 
-      // Jika berhasil, tutup halaman & refresh daftar review di halaman sebelumnya
       if (response['title'] != null) {
-        Navigator.pop(context, true); 
+        Navigator.pop(context, true);
       } else {
-        // Gagal
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to add review.')),
         );
@@ -47,74 +46,124 @@ class _AddReviewPageState extends State<AddReviewPage> {
         SnackBar(content: Text("Error adding review: $e")),
       );
     } finally {
-      setState(() { isLoading = false; });
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     const primaryRed = Color(0xFFFF5252);
-    const darkBlue = Color(0xFF1C1E26);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Review'),
+        title: const Text('Add Review', style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
         backgroundColor: primaryRed,
+        elevation: 0,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: primaryRed))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title Field
+                  const Text(
+                    "Review Title",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: _titleController,
-                    decoration: const InputDecoration(
-                      labelText: 'Review Title',
+                    decoration: InputDecoration(
                       hintText: 'Enter review title',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Score Field
-                  TextField(
-                    controller: _scoreController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Score',
-                      hintText: 'Enter a numeric score',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Content Field
-                  TextField(
-                    controller: _contentController,
-                    maxLines: 5,
-                    decoration: const InputDecoration(
-                      labelText: 'Content',
-                      hintText: 'Write your review here...',
-                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: submitReview,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryRed,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+
+                  const Text(
+                    "Rating",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return IconButton(
+                        iconSize: 36.0,
+                        icon: index < _selectedScore
+                            ? const Icon(Icons.star, color: Colors.yellow)
+                            : const Icon(Icons.star_border, color: Colors.grey),
+                        onPressed: () {
+                          setState(() {
+                            _selectedScore = index + 1;
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 24),
+
+                  const Text(
+                    "Content",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _contentController,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      hintText: 'Write your review here...',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
                       ),
                     ),
-                    child: const Text(
-                      'Submit',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(height: 32),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _selectedScore == 0 ? null : submitReview,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryRed,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text(
+                        'Submit',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
