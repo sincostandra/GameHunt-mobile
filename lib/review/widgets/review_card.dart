@@ -6,13 +6,15 @@ class ReviewCard extends StatelessWidget {
   final bool isAdmin;
   final String currentUsername;
   final Function(int reviewId) onDeleteReview;
+  final Function(int reviewId, String voteType) onVote;
 
   const ReviewCard({
-    super.key, 
-    required this.review, 
+    super.key,
+    required this.review,
     required this.isAdmin,
     required this.currentUsername,
     required this.onDeleteReview,
+    required this.onVote,
   });
 
   @override
@@ -22,7 +24,8 @@ class ReviewCard extends StatelessWidget {
     const Color primaryRed = Color(0xFFFF5252);
     const Color darkBlue = Color(0xFF1C1E26);
 
-    final canDelete = isAdmin || (review.username == currentUsername);  
+    final canDelete = isAdmin || (review.username == currentUsername);
+    final canVote = review.username != currentUsername; // Users can't vote on their own reviews
 
     return Card(
       color: darkBlue,
@@ -35,6 +38,7 @@ class ReviewCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header: Username and Delete Button
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -53,20 +57,24 @@ class ReviewCard extends StatelessWidget {
                   ),
               ],
             ),
+
             const SizedBox(height: 8),
+
             // Title
             Text(
               review.title,
               style: const TextStyle(color: white, fontSize: 16),
             ),
             const SizedBox(height: 8),
-            // Score + content
+
+            // Score + Content
             Text(
               "Score: ${review.score}\n${review.content}",
               style: const TextStyle(color: lightGray, fontSize: 14),
             ),
             const SizedBox(height: 8),
-            // Date + Voting
+
+            // Date and Voting Buttons
             Row(
               children: [
                 Text(
@@ -74,7 +82,34 @@ class ReviewCard extends StatelessWidget {
                   style: const TextStyle(color: lightGray, fontSize: 12),
                 ),
                 const Spacer(),
-                // Dst ...
+                if (canVote) ...[
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_upward,
+                          color: review.userUpvoted ? Colors.green : lightGray,
+                        ),
+                        onPressed: () => onVote(review.id, 'upvote'),
+                      ),
+                      Text(
+                        '${review.voteScore}',
+                        style: const TextStyle(
+                          color: white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_downward,
+                          color: review.userDownvoted ? Colors.red : lightGray,
+                        ),
+                        onPressed: () => onVote(review.id, 'downvote'),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ],
