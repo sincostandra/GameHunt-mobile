@@ -82,6 +82,40 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
+  Future<void> _voteReview(int reviewId, String voteType) async {
+  final request = context.read<CookieRequest>();
+  final url = "http://127.0.0.1:8000/review/vote_flutter/";
+
+  try {
+    final response = await request.post(url, {
+      'review_id': reviewId.toString(),
+      'vote_type': voteType,
+    });
+
+    // print(response.statusCode);
+    // print(response.body);
+    // print(response);
+    final data = response;
+    if (data['status'] == 'success') {
+      // print('Success');
+      await fetchData(); // Refresh to reorder reviews by vote_score
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vote successful')),
+      );
+    } else {
+      // print('Vote failed: ${data['message']}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(data['message'] ?? 'Failed to vote')),
+      );
+    }
+  } catch (e) {
+    // print('Error voting: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error voting: $e')),
+    );
+  }
+}
+
   Future<void> _deleteReview(int reviewId) async {
   final request = context.read<CookieRequest>();
   final url = Uri.parse("http://127.0.0.1:8000/review/delete_review_flutter/$reviewId/");
@@ -195,6 +229,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                   isAdmin: isAdmin,
                                   currentUsername: currentUsername,
                                   onDeleteReview: _deleteReview,
+                                  onVote: _voteReview
                                 ),
                                 const Divider(color: primaryRed),
                               ],
@@ -232,6 +267,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                             isAdmin: isAdmin,
                                             currentUsername: currentUsername,
                                             onDeleteReview: _deleteReview,
+                                            onVote: _voteReview
                                           ),
                                           const Divider(color: primaryRed),
                                         ],
