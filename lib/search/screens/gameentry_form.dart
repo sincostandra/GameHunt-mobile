@@ -141,36 +141,45 @@ class _GameEntryFormPageState extends State<GameEntryFormPage> {
                     ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        final response = await request.postJson(
-                          "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/create-game-flutter/",
-                          jsonEncode(<String, dynamic>{
-                            'name': _name,
-                            'year': _year,
-                            'description': _description,
-                            'developer': _developer,
-                            'genre': _genre,
-                            'ratings': _ratings,
-                            'harga': _harga,
-                            'toko1': _toko1,
-                            'alamat1': _alamat1,
-                            'toko2': _toko2,
-                            'alamat2': _alamat2,
-                            'toko3': _toko3,
-                            'alamat3': _alamat3,
-                          }),
-                        );
-
-                        if (response['status'] == 'success') {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Game successfully saved!"),
-                            ),
+                        try {
+                          final response = await request.post(
+                            "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/create-game-flutter/",
+                            jsonEncode({
+                              'name': _name,
+                              'year': _year,
+                              'description': _description,
+                              'developer': _developer,
+                              'genre': _genre,
+                              'ratings': _ratings,
+                              'harga': _harga,
+                              'toko1': _toko1,
+                              'alamat1': _alamat1,
+                              'toko2': _toko2,
+                              'alamat2': _alamat2,
+                              'toko3': _toko3,
+                              'alamat3': _alamat3,
+                            }),
                           );
-                          Navigator.pop(context);
-                        } else {
+
+                          if (response['status'] == 'success') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Game successfully saved!"),
+                              ),
+                            );
+                            Navigator.pop(context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(response['message'] ??
+                                    "Error saving game."),
+                              ),
+                            );
+                          }
+                        } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Error saving game."),
+                            SnackBar(
+                              content: Text("An error occurred: $e"),
                             ),
                           );
                         }
