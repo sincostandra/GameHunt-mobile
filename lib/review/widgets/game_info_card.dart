@@ -45,7 +45,6 @@ class GameInfoCard extends StatelessWidget {
             _buildInfoRow(Icons.calendar_today, 'Year', '${game?.fields.year ?? "N/A"}'),
             _buildInfoRow(Icons.developer_mode, 'Developer', game?.fields.developer ?? "N/A"),
             _buildInfoRow(Icons.category, 'Genre', game?.fields.genre ?? "N/A"),
-            // _buildInfoRow(Icons.star, 'Rating', game?.fields.ratings ?? "N/A"),
           ],
         ),
       ),

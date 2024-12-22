@@ -37,7 +37,7 @@ class _GameEntryPageState extends State<GameEntryPage> {
     final request = context.read<CookieRequest>();
     try {
       final response = await request
-          .get('http://127.0.0.1:8000/user-role/');
+          .get('https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/user-role/');
       setState(() {
         _isAdmin = response['role'] == 'admin'; // Cek role user
       });
@@ -51,7 +51,7 @@ class _GameEntryPageState extends State<GameEntryPage> {
     try {
       // Ambil data dari API
       final response = await request
-          .get('http://127.0.0.1:8000/search/json/');
+          .get('https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/search/json/');
 
       // print("Raw response: $response");
 

@@ -24,9 +24,9 @@ class _AddReviewPageState extends State<AddReviewPage> {
     });
 
     final request = context.read<CookieRequest>();
-    try {
+    try { // fetch (POST) ke API untuk menambah review
       final response = await request.post(
-        "http://127.0.0.1:8000/review/create_review_ajax/${widget.gameId}",
+        "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/create_review_ajax/${widget.gameId}",
         {
           'title': _titleController.text,
           'score': _selectedScore.toString(), // Kirim rating
