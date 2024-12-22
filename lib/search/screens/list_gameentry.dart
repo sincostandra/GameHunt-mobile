@@ -450,21 +450,20 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                           // Tombol Delete
                                           ElevatedButton(
                                             onPressed: () async {
-                                              // Karena tidak ada deleteJson, kita gunakan http.delete
                                               final url = Uri.parse(
                                                   "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/delete-game-flutter/${gameData.pk}/");
-                                              final httpResponse =
-                                                  await http.delete(url);
-                                              if (httpResponse.statusCode ==
-                                                  200) {
-                                                final responseData = jsonDecode(
-                                                    httpResponse.body);
-                                                if (responseData['status'] ==
+
+                                              setState(() {
+                                                _filteredGames.removeAt(index);
+                                              });
+                                              try {
+                                                // Kirim HTTP POST request (untuk simulasi penghapusan)
+                                                final response = await request
+                                                    .post(url.toString(), {});
+
+                                                if (response['status'] ==
                                                     'success') {
-                                                  setState(() {
-                                                    _filteredGames
-                                                        .removeAt(index);
-                                                  });
+                                                  // Notifikasi keberhasilan
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
                                                     const SnackBar(
@@ -473,20 +472,19 @@ class _GameEntryPageState extends State<GameEntryPage> {
                                                     ),
                                                   );
                                                 } else {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    const SnackBar(
-                                                      content: Text(
-                                                          "Error deleting game."),
-                                                    ),
-                                                  );
+                                                  throw Exception(
+                                                      response['message']);
                                                 }
-                                              } else {
+                                              } catch (e) {
+                                                // Jika terjadi error, tambahkan kembali game ke UI
+                                                setState(() {
+                                                  _filteredGames.insert(index,
+                                                      gameData); // gameData harus didefinisikan
+                                                });
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
-                                                  const SnackBar(
-                                                    content: Text(
-                                                        "Error deleting game."),
+                                                  SnackBar(
+                                                    content: Text("Error: $e"),
                                                   ),
                                                 );
                                               }

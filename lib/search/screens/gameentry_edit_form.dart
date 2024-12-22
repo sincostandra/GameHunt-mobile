@@ -56,51 +56,39 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
         "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/edit-game-flutter/${widget.gameId}/");
 
     try {
-      // Headers: Sertakan cookie untuk otentikasi
-      final headers = {
-        'Content-Type': 'application/json',
-        'Cookie': request.headers['cookie'] ?? '',
-      };
+      // Mengirim POST request menggunakan CookieRequest
+      final response = await request.post(
+        url.toString(),
+        jsonEncode({
+          'name': _name,
+          'year': _year ?? 0, // Langsung masukkan nilai default untuk int
+          'description': _description,
+          'developer': _developer,
+          'genre': _genre,
+          'ratings':
+              _ratings, // Tidak perlu diubah karena jsonEncode akan menangani
+          'harga': _harga, // Tidak perlu diubah
+          'toko1': _toko1,
+          'alamat1': _alamat1,
+          'toko2': _toko2 ??
+              '', // Ganti nilai nullable dengan String kosong jika null
+          'alamat2': _alamat2 ?? '',
+          'toko3': _toko3 ?? '',
+          'alamat3': _alamat3 ?? '',
+        }),
+      );
 
-      // Body data
-      final body = jsonEncode(<String, dynamic>{
-        'name': _name,
-        'year': _year,
-        'description': _description,
-        'developer': _developer,
-        'genre': _genre,
-        'ratings': _ratings,
-        'harga': _harga,
-        'toko1': _toko1,
-        'alamat1': _alamat1,
-        'toko2': _toko2,
-        'alamat2': _alamat2,
-        'toko3': _toko3,
-        'alamat3': _alamat3,
-      });
-
-      // HTTP PUT request
-      final response = await http.put(url, headers: headers, body: body);
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        if (responseData['status'] == 'success') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Game successfully updated!")),
-          );
-          Navigator.pop(context);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error: ${responseData['message']}")),
-          );
-        }
-      } else {
+      if (response['status'] == 'success') {
+        // Jika berhasil
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text("Error updating game: ${response.statusCode}")),
+          const SnackBar(content: Text("Game successfully updated!")),
         );
+        Navigator.pop(context);
+      } else {
+        throw Exception(response['message']);
       }
     } catch (e) {
+      // Jika terjadi error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("An error occurred: $e")),
       );
@@ -129,9 +117,12 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
               _buildTextField(
                 label: "Year",
                 keyboardType: TextInputType.number,
-                initialValue: _year?.toString(),
+                initialValue: _year
+                    ?.toString(), // Tambahkan .toString() jika _year adalah int
                 onChanged: (value) =>
                     setState(() => _year = int.tryParse(value!)),
+                validator: (value) =>
+                    value!.isEmpty ? "Year cannot be empty!" : null,
               ),
               _buildTextField(
                 label: "Description",
@@ -250,7 +241,7 @@ class _GameEntryEditFormPageState extends State<GameEntryEditFormPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
-        initialValue: initialValue,
+        initialValue: initialValue?.toString() ?? '', // Konversi ke String
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(
