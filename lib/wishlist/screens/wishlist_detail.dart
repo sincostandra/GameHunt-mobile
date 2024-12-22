@@ -11,7 +11,7 @@ class WishlistDetailPage extends StatelessWidget {
 
   Future<void> _addToWishlist(BuildContext context) async {
     final request = context.read<CookieRequest>();
-    final response = await request.postJson(
+    final response = await request.post(
       'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/wishlist/add-wishlist-ajax/',
       jsonEncode(<String, dynamic>{
         'game_id': gameId,
