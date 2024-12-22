@@ -47,7 +47,7 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
-  // Fetch game data, all reviews, and user review
+  // Fetch the game data, all reviews, and user review
   Future<void> fetchData() async {
     setState(() { isLoading = true; });
     final request = context.read<CookieRequest>();
