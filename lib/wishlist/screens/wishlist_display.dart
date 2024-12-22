@@ -41,35 +41,54 @@ class _WishlistPageState extends State<WishlistPage> {
   }
 
   Future<void> removeFromWishlist(String id, int index) async {
+    final request = context.read<CookieRequest>();
     try {
-      final response = await http.delete(Uri.parse(
-          'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/wishlist/delete-wishlist-flutter/$id/'));
-      if (response.statusCode == 200) {
-        final removedItem = wishlist[index];
-        _listKey.currentState?.removeItem(
-          index,
-          (context, animation) =>
-              _buildAnimatedWishlistCard(removedItem, animation),
-          duration: const Duration(milliseconds: 300),
-        );
+      final response = await request.post(
+        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/wishlist/delete-wishlist-flutter/$id/',
+        {},
+      );
 
-        await Future.delayed(const Duration(milliseconds: 300));
+      if (response['status'] == 'success') {
+        final removedItem = wishlist[index];
+        
+        // Remove from data first
         setState(() {
           wishlist.removeAt(index);
         });
+
+        // Then animate the removal
+        _listKey.currentState?.removeItem(
+          index,
+          (context, animation) => SizeTransition(
+            sizeFactor: animation,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: _buildWishlistCard(removedItem, isAnimating: true),
+            ),
+          ),
+          duration: const Duration(milliseconds: 300),
+        );
       } else {
-        print('Error removing from wishlist: ${response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${response['message']}')),
+        );
       }
     } catch (e) {
-      print('Error removing from wishlist: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     }
   }
 
-  Widget _buildAnimatedWishlistCard(
-      dynamic wishlistItem, Animation<double> animation) {
+  // Update _buildAnimatedWishlistCard to use key
+  Widget _buildAnimatedWishlistCard(dynamic wishlistItem, Animation<double> animation) {
     return SizeTransition(
+      key: ValueKey(wishlistItem['id']), // Add key
       sizeFactor: animation,
-      child: _buildWishlistCard(wishlistItem, isAnimating: true),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: _buildWishlistCard(wishlistItem, isAnimating: true),
+      ),
     );
   }
 
