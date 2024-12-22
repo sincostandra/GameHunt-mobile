@@ -10,11 +10,13 @@ class CommentItem extends StatelessWidget {
   final CommentEntry comment;
   final bool isAdmin;
   final Game game;
+  final VoidCallback onDelete;
 
   CommentItem({
     required this.comment,
     required this.isAdmin,
     required this.game,
+    required this.onDelete
   });
 
   @override
@@ -39,50 +41,7 @@ class CommentItem extends StatelessWidget {
               if (isAdmin)
                 IconButton(
                   icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () async {
-              // Karena tidak ada deleteJson, kita gunakan http.delete
-              final url = Uri.parse(
-                  "http://127.0.0.1:8000/display/delete-comment-flutter/${comment.pk}/");
-              final httpResponse =
-                  await http.delete(url);
-              if (httpResponse.statusCode ==
-                  200) {
-                final responseData = jsonDecode(
-                    httpResponse.body);
-                if (responseData['status'] ==
-                    'success') {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            GameDetailPage(game: game, isAdmin: true)),
-                  );
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                          "Comment successfully deleted!"),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                          "Error deleting comment."),
-                    ),
-                  );
-                }
-              } else {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                        "Error deleting comment."),
-                  ),
-                );
-              }
-            },
+                  onPressed: onDelete
                 ),
             ],
           ),

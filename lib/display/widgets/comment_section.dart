@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:gamehunt/display/models/comment.dart'; // Adjust the import according to your project structure
 import 'package:gamehunt/display/widgets/comment_item.dart'; // Import the CommentItem widget
 import 'package:gamehunt/models/game.dart'; // Adjust the import according to your project structure
+import 'package:gamehunt/display/screens/game_details.dart';
 
 class CommentSection extends StatelessWidget {
   final Game game;
@@ -12,9 +13,9 @@ class CommentSection extends StatelessWidget {
   const CommentSection({super.key, required this.game, required this.isAdmin});
 
   Future<List<CommentEntry>> fetchComment(
-      CookieRequest request, String gameId) async {
+      CookieRequest request) async {
     final response = await request.get(
-        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/display/show-json/$gameId/');
+        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/display/show-json/${game.pk}/');
     var data = response;
     List<CommentEntry> listComment = [];
     for (var d in data) {
@@ -25,12 +26,45 @@ class CommentSection extends StatelessWidget {
     return listComment;
   }
 
+  Future<void> _deleteComment(BuildContext context, int commentId) async {
+    final request = context.read<CookieRequest>();
+    // Delete di PWS gabisa, jadi pake post aja
+    // final url = Uri.parse("https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/delete_review_flutter/$reviewId");
+
+    try {
+      final response = await request.post(
+        "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/display/delete-comment-flutter/$commentId/",
+        {}
+      );
+
+      if (response['status'] == 'success') {
+        await fetchComment(request); // Refresh data
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Comment deleted successfully!')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GameDetailPage(game: game, isAdmin: true)),
+        );
+      } else {
+        throw Exception(response['message']);
+      }
+    } catch (e) {
+      // If error, revert the state
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
 
     return FutureBuilder<List<CommentEntry>>(
-      future: fetchComment(request, game.pk),
+      future: fetchComment(request),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -70,7 +104,12 @@ class CommentSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ...snapshot.data!.map((comment) => CommentItem(
-                      comment: comment, isAdmin: isAdmin, game: game)),
+                      comment: comment, 
+                      isAdmin: isAdmin, 
+                      game: game, 
+                      onDelete: () {
+                        _deleteComment(context, comment.pk);
+                      })),
                 ],
               ),
             ),
