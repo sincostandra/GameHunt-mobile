@@ -57,28 +57,20 @@ class NewsDetail extends StatelessWidget {
               heroTag: null,
               onPressed: () async {
                 // Karena tidak ada deleteJson, kita gunakan http.delete
-                final url = Uri.parse(
-                    "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/news/delete-flutter/${news.pk}/");
-                final httpResponse = await http.delete(url);
-                if (httpResponse.statusCode == 200) {
-                  final responseData = jsonDecode(httpResponse.body);
-                  if (responseData['status'] == 'success') {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const NewsPage()),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Game successfully deleted!"),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Error deleting game."),
-                      ),
-                    );
-                  }
+                //final url = Uri.parse(
+                  //  "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/news/delete-flutter/${news.pk}/");
+                final jsonResponse = await request.post("https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/news/delete-flutter/${news.pk}/", {});
+                final responseData = jsonResponse;
+                if (responseData['status'] == 'success') {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NewsPage()),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Game successfully deleted!"),
+                    ),
+                  );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
