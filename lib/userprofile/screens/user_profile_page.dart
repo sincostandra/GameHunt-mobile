@@ -42,7 +42,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Future<UserProfile> fetchUserProfile(CookieRequest request) async {
     final response = await request.get(
-        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/userprofile/userprofile/get/');
+        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/userprofile/userprofile/get');
 
     var data = response;
 
