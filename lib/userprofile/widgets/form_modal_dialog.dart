@@ -481,7 +481,7 @@ class _FormModalDialogState extends State<FormModalDialog> {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    // print(_dateOfBirthController.text);
+                                    /// print(_dateOfBirthController.text);
                                     final response = await request.post(
                                       "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/userprofile/userprofile/update-flutter",
                                       jsonEncode(<String, dynamic>{
