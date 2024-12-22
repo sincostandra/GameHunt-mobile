@@ -55,7 +55,7 @@ class CommentForm extends StatelessWidget {
                   if (formKey.currentState!.validate()) {
                     final request = context.read<CookieRequest>();
                     // Kirim ke Django dan tunggu respons
-                    final response = await request.postJson(
+                    final response = await request.post(
                       "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/display/create-comment-flutter/",
                       jsonEncode(<String, String>{
                         'body': body,

@@ -11,8 +11,7 @@ class CommentItem extends StatelessWidget {
   final bool isAdmin;
   final Game game;
 
-  const CommentItem({
-    super.key,
+  CommentItem({
     required this.comment,
     required this.isAdmin,
     required this.game,
@@ -20,8 +19,7 @@ class CommentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate =
-        DateFormat('yyyy-MM-dd – kk:mm').format(comment.fields.created);
+    final formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(comment.fields.created);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -40,41 +38,51 @@ class CommentItem extends StatelessWidget {
               ),
               if (isAdmin)
                 IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
+                  icon: Icon(Icons.delete, color: Colors.red),
                   onPressed: () async {
-                    // Karena tidak ada deleteJson, kita gunakan http.delete
-                    final url = Uri.parse(
-                        "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/display/delete-comment-flutter/${comment.pk}/");
-                    final httpResponse = await http.delete(url);
-                    if (httpResponse.statusCode == 200) {
-                      final responseData = jsonDecode(httpResponse.body);
-                      if (responseData['status'] == 'success') {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  GameDetailPage(game: game, isAdmin: true)),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Comment successfully deleted!"),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Error deleting comment."),
-                          ),
-                        );
-                      }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Error deleting comment."),
-                        ),
-                      );
-                    }
-                  },
+              // Karena tidak ada deleteJson, kita gunakan http.delete
+              final url = Uri.parse(
+                  "http://127.0.0.1:8000/display/delete-comment-flutter/${comment.pk}/");
+              final httpResponse =
+                  await http.delete(url);
+              if (httpResponse.statusCode ==
+                  200) {
+                final responseData = jsonDecode(
+                    httpResponse.body);
+                if (responseData['status'] ==
+                    'success') {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            GameDetailPage(game: game, isAdmin: true)),
+                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          "Comment successfully deleted!"),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          "Error deleting comment."),
+                    ),
+                  );
+                }
+              } else {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        "Error deleting comment."),
+                  ),
+                );
+              }
+            },
                 ),
             ],
           ),
