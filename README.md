@@ -8,6 +8,9 @@
 - Utandra Nur Ahmad Jais - 2306152443  
 - Rahma Dwi Maghfira - 2306245794  
 
+## Progress Tracker
+https://docs.google.com/spreadsheets/d/15FL62ygBmZk5IhgyG3UJd2Lbju4LETrNI1l4HdX3UYA/edit?usp=sharing
+
 ---
 
 ## **Deskripsi Aplikasi**
