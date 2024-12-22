@@ -33,10 +33,11 @@ class _ReviewPageState extends State<ReviewPage> {
     fetchData();
   }
 
+  // Fetch user role and username
   Future<void> fetchUserData() async {
     final request = context.read<CookieRequest>();
     try {
-      final response = await request.get('http://127.0.0.1:8000/review/get_user_role');
+      final response = await request.get('https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/get_user_role');
       setState(() {
         isAdmin = response['role'] == 'admin';
         currentUsername = response['username'] ?? "";
@@ -46,6 +47,7 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
+  // Fetch game data, all reviews, and user review
   Future<void> fetchData() async {
     setState(() { isLoading = true; });
     final request = context.read<CookieRequest>();
@@ -53,13 +55,13 @@ class _ReviewPageState extends State<ReviewPage> {
       await fetchUserData();
 
       final gameResponse = await request.get(
-        'http://127.0.0.1:8000/search/json/${widget.gameId}',
+        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/search/json/${widget.gameId}',
       );
       final allResponse = await request.get(
-        'http://127.0.0.1:8000/review/get_review_json/${widget.gameId}',
+        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/get_review_json/${widget.gameId}',
       );
       final userResponse = await request.get(
-        'http://127.0.0.1:8000/review/get_user_review/${widget.gameId}',
+        'https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/get_user_review/${widget.gameId}',
       );
 
       setState(() {
@@ -84,7 +86,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Future<void> _voteReview(int reviewId, String voteType) async {
   final request = context.read<CookieRequest>();
-  final url = "http://127.0.0.1:8000/review/vote_flutter/";
+  final url = "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/vote_flutter/";
 
   try {
     final response = await request.post(url, {
@@ -92,24 +94,18 @@ class _ReviewPageState extends State<ReviewPage> {
       'vote_type': voteType,
     });
 
-    // print(response.statusCode);
-    // print(response.body);
-    // print(response);
     final data = response;
     if (data['status'] == 'success') {
-      // print('Success');
       await fetchData(); // Refresh to reorder reviews by vote_score
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vote successful')),
       );
     } else {
-      // print('Vote failed: ${data['message']}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(data['message'] ?? 'Failed to vote')),
       );
     }
   } catch (e) {
-    // print('Error voting: $e');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Error voting: $e')),
     );
@@ -118,7 +114,8 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Future<void> _deleteReview(int reviewId) async {
   final request = context.read<CookieRequest>();
-  final url = Uri.parse("http://127.0.0.1:8000/review/delete_review_flutter/$reviewId/");
+  // Delete di PWS gabisa, jadi pake post aja
+  // final url = Uri.parse("https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/delete_review_flutter/$reviewId");
   
   // If it's user's own review, update state immediately
   if (userReview?.id == reviewId) {
@@ -128,18 +125,18 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   try {
-    final response = await http.delete(
-      url,
+    final response = await request.post(
+      "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/review/delete_review_flutter/$reviewId/",
+      {}
     );
 
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      if (responseData['status'] == 'success') {
-        await fetchData(); // Refresh data
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Review deleted successfully')),
-        );
-      }
+    if (response['status'] == 'success') {
+      await fetchData(); // Refresh data
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Review deleted successfully')),
+      );
+    } else {
+      throw Exception(response['message']);
     }
   } catch (e) {
     // If error, revert the state

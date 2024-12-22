@@ -8,6 +8,9 @@
 - Utandra Nur Ahmad Jais - 2306152443  
 - Rahma Dwi Maghfira - 2306245794  
 
+## Progress Tracker
+https://docs.google.com/spreadsheets/d/15FL62ygBmZk5IhgyG3UJd2Lbju4LETrNI1l4HdX3UYA/edit?usp=sharing
+
 ---
 
 ## **Deskripsi Aplikasi**
@@ -28,7 +31,7 @@ Aplikasi ini mengintegrasikan layanan web Django dari proyek tengah semester unt
 #### **Review** (Utandra Nur Ahmad Jais)
 
 - Pengguna memiliki kemampuan untuk menambahkan ulasan terkait kaset game dari berbagai toko terdekat. Setiap review bisa memberikan informasi yang bermanfaat bagi pengguna lain.
-- Ulasan dapat diurutkan berdasarkan jumlah bintang, sehingga memudahkan pengguna untuk melihat review dengan rating tertinggi.
+- Ulasan diurutkan berdasarkan jumlah vote (like and dislike), sehingga memudahkan pengguna untuk melihat review dengan relevansi dan kualitas review tertinggi
 - Admin memiliki kendali penuh atas review, termasuk kemampuan untuk menambah dan menghapus review sesuai kebutuhan.
 
 #### **User Authentication** (Oscar Ryanda Putra)
