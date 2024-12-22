@@ -146,7 +146,7 @@ class _NewsFormPageState extends State<NewsFormPage> {
                     if (_formKey.currentState!.validate()) {
                       // Kirim ke Django dan tunggu respons
                       // Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                      final response = await request.postJson(
+                      final response = await request.post(
                         "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/news/create-flutter/",
                         jsonEncode(<String, String>{
                           'title': _title,

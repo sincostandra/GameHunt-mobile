@@ -53,27 +53,19 @@ class _NewsEditFormPageState extends State<NewsEditFormPage> {
       });
 
       // HTTP PUT request
-      final response = await http.put(url, headers: headers, body: body);
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        if (responseData['status'] == 'success') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("News successfully updated!")),
-          );
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NewsPage()),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error: ${responseData['message']}")),
-          );
-        }
+      final response = await request.post(url.toString(), body);
+      final responseData = response;
+      if (responseData['status'] == 'success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("News successfully updated!")),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const NewsPage()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text("Error updating news: ${response.statusCode}")),
+          SnackBar(content: Text("Error: ${responseData['message']}")),
         );
       }
     } catch (e) {
